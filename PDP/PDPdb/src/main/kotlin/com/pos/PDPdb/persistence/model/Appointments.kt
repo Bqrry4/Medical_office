@@ -3,6 +3,17 @@ package com.pos.PDPdb.persistence.model
 import jakarta.persistence.*
 import java.sql.Date
 
+//enum class Status(val state: String) {
+//    APPROVED("onorată"),
+//    NOT_PRESENT("neprezentat"),
+//    CANCELLED("anulată");
+//
+//    @JsonValue
+//    override fun toString(): String {
+//        return this.state
+//    }
+//}
+
 enum class Status {
     Onorata,
     Neprezentat,

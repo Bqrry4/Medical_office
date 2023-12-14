@@ -1,19 +1,20 @@
 Use pos;
 
 Create Table Patients(
-	cnp char(13) primary key,
-	id_user int, #So called foreign key,
+	cnp char(13) primary key unique,
+	id_user int unique, #So called foreign key,
 	last_name varchar(50),
 	first_name varchar(50),
 	email varchar(70) unique, 
 	phone char(10),
 	birth_day date,
-	is_active boolean
+	is_active boolean default(true),
+	Constraint CHK_Phone check (phone like '07%')
 );
 
 Create Table Physicians(
 	id_physician int primary key AUTO_INCREMENT,
-	id_user int, #So called foreign key,
+	id_user int unique, #So called foreign key,
 	last_name varchar(50),
 	first_name varchar(50),
 	email varchar(70) unique,

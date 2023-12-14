@@ -9,16 +9,21 @@ import java.sql.Date
 @Table(name = "Patients")
 @Getter
 @Setter
-class Patient (
+public class Patient (
     @Id var cnp: String,
-    var id_user: Int,
-    var last_name: String,
-    var first_name: String,
+    @Column(name="id_user")
+    var userID: Int,
+    @Column(name="last_name")
+    var lastName: String,
+    @Column(name="first_name")
+    var firstName: String,
     @Column(unique=true)
     var email: String,
     var phone: String,
-    var birth_day: Date,
-    var is_active: Boolean,
+    @Column(name="birth_day")
+    var birthDay: Date,
+    @Column(name="is_active")
+    var isActive: Boolean,
 
     @OneToMany(mappedBy = "patient")
     var appointments: Set<Appointments>

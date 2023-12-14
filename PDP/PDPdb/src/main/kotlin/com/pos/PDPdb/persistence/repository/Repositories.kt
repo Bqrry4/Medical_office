@@ -8,4 +8,6 @@ interface PatientRepository : JpaRepository<Patient, String> {
 }
 
 interface PhysicianRepository : JpaRepository<Physician, Long> {
+    fun findBySpecializationStartingWith(specialization: String): Iterable<Physician>
+    fun findByLastNameStartingWith(specialization: String): Iterable<Physician>
 }

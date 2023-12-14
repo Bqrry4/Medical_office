@@ -1,11 +1,11 @@
-package com.pos.PDPdb
+package com.pos.consults
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class PdPdbApplication
+class ConsultsApplication
 
 fun main(args: Array<String>) {
-	runApplication<PdPdbApplication>(*args)
+	runApplication<ConsultsApplication>(*args)
 }

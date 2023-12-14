@@ -6,10 +6,14 @@ import jakarta.persistence.*
 @Table(name = "Physicians")
 class Physician (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id var id_physician: Int,
-    var id_user: Int,
-    var last_name: String,
-    var first_name: String,
+    @Column(name="id_physician")
+    @Id var physicianId: Int,
+    @Column(name="id_user")
+    var userId: Int,
+    @Column(name="last_name")
+    var lastName: String,
+    @Column(name="first_name")
+    var firstName: String,
     @Column(unique=true)
     var email: String,
     var phone: String,
