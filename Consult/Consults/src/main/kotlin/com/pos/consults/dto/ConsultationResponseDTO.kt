@@ -4,7 +4,7 @@ import com.pos.consults.persistance.model.Consultation
 import com.pos.consults.persistance.model.Diagnostic
 import java.util.*
 
-data class ConsultationDTO (
+data class ConsultationResponseDTO (
     val patientId : Int,
     val physicianId: Int,
     val data: Date,
@@ -12,7 +12,7 @@ data class ConsultationDTO (
     val investigations: List<InvestigationDTO>
 )
 
-fun Consultation.toDTO() = ConsultationDTO(
+fun Consultation.toDTO() = ConsultationResponseDTO(
     patientId = patientId,
     physicianId = physicianId,
     data = data,

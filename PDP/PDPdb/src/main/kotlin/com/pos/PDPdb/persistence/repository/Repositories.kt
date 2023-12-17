@@ -36,5 +36,6 @@ interface AppointmentRepository : JpaRepository<Appointment, AppointmentsKey> {
     @Query(value = "select * from Appointments a where a.id_physician = ?1 and month(a.data) = month(?2)",
         nativeQuery = true)
     fun findByIdPhysicianWithinAMonth(id: Int, date: Date): Iterable<Appointment>
+
     fun findByIdPatientIDAndIdPhysicianIDAndIdDate(patientId: String, physicianId:Int, date: Date): Optional<Appointment>
 }
