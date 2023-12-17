@@ -1,6 +1,7 @@
 package com.pos.PDPdb.component
 
 import com.pos.PDPdb.controller.PatientsController
+import com.pos.PDPdb.controller.PhysiciansController
 import com.pos.PDPdb.dto.AppointmentDTO
 import com.pos.PDPdb.dto.PatientResponseDTO
 import org.springframework.hateoas.CollectionModel
@@ -15,9 +16,9 @@ class AppointmentModelAssembler : RepresentationModelAssembler<AppointmentDTO, E
     override fun toModel(appointment: AppointmentDTO): EntityModel<AppointmentDTO> {
         return EntityModel.of(
             appointment,
-            WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatientsController::class.java).getAppointment(appointment.patient.cnp, appointment.physician.physicianId, SimpleDateFormat("dd-MM-yyyy").format(appointment.date)))
+            WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getAppointment(appointment.physician.physicianId, appointment.patient.cnp, SimpleDateFormat("dd-MM-yyyy HH:mm").format(appointment.date)))
                 .withSelfRel(),
-            WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatientsController::class.java).getPatientAppointments(appointment.patient.cnp, null, null)).withRel("parent")
+            WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysicianAppointments(appointment.physician.physicianId, null, null)).withRel("parent")
         )
     }
 

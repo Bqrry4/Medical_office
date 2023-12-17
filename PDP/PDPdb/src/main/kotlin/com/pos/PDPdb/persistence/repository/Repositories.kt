@@ -6,7 +6,6 @@ import com.pos.PDPdb.persistence.model.Patient
 import com.pos.PDPdb.persistence.model.Physician
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import java.sql.Date
 import java.util.*
 
 interface PatientRepository : JpaRepository<Patient, String> {
@@ -23,8 +22,13 @@ interface PhysicianRepository : JpaRepository<Physician, Int> {
 interface AppointmentRepository : JpaRepository<Appointment, AppointmentsKey> {
     fun findByIdPatientID(id: String): Iterable<Appointment>
     fun findByIdPhysicianID(id: Int): Iterable<Appointment>
-    fun findByIdPatientIDAndIdDate(id: String, date: Date): Iterable<Appointment>
-    fun findByIdPhysicianIDAndIdDate(id: Int, date: Date): Iterable<Appointment>
+
+    @Query(value = "select * from Appointments a where a.id_patient = ?1 and date(a.data) = date(?2)",
+        nativeQuery = true)
+    fun findByPatientIDAndDate(id: String, date: Date): Iterable<Appointment>
+    @Query(value = "select * from Appointments a where a.id_physician = ?1 and date(a.data) = date(?2)",
+        nativeQuery = true)
+    fun findByPhysicianIDAndDate(id: Int, date: Date): Iterable<Appointment>
 
     @Query(value = "select * from Appointments a where a.id_patient = ?1 and month(a.data) = month(?2)",
         nativeQuery = true)

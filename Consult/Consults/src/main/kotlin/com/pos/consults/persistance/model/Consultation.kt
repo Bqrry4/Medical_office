@@ -5,7 +5,7 @@ import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
-import java.sql.Date
+import java.util.*
 
 enum class Diagnostic(val state: String) {
     HEALTHY("sanatos"),
@@ -28,7 +28,7 @@ data class Consultation (
     @Field(name="data")
     val data: Date,
     @Field(name="diagnostic")
-    val diagnostic : Diagnostic,
+    val diagnostic : Diagnostic?,
     @Field(name="investigations")
     val investigations: List<Investigation>
 )

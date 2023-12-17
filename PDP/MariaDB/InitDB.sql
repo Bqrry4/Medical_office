@@ -9,7 +9,8 @@ Create Table Patients(
 	phone char(10),
 	birth_day date,
 	is_active boolean default(true),
-	Constraint CHK_Phone check (phone like '07%')
+	Constraint CHK_Phone check (phone like '07%'),
+	Constraint CHK_Email check (email like '%@%.%')
 );
 
 Create Table Physicians(
@@ -19,16 +20,19 @@ Create Table Physicians(
 	first_name varchar(50),
 	email varchar(70) unique,
 	phone char(10),
-	specialization char(10)
+	specialization char(10),
+	Constraint CHK_Phone check (phone like '07%'),
+	Constraint CHK_Email check (email like '%@%.%')
 );
 
 Create Table Appointments(
 	id_patient varchar(13),
 	id_physician int,
-	data Date,
+	data datetime,
 	status ENUM('onorată', 'neprezentat', 'anulată'),
 	Constraint fk_id_patient foreign key (id_patient) references Patients(cnp),
-	Constraint fk_id_physician foreign key (id_physician) references Physicians(id_physician)
+	Constraint fk_id_physician foreign key (id_physician) references Physicians(id_physician),
+	PRIMARY KEY (id_patient, id_physician, data)
 );
 
 

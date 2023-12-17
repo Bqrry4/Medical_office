@@ -1,11 +1,12 @@
 package com.pos.PDPdb.controller
 
+import com.pos.PDPdb.component.AppointmentModelAssembler
 import com.pos.PDPdb.component.PhysicianModelAssembler
 import com.pos.PDPdb.dto.*
 import com.pos.PDPdb.persistence.model.Appointment
 import com.pos.PDPdb.persistence.model.AppointmentsKey
-import com.pos.PDPdb.persistence.model.Physician
 import com.pos.PDPdb.persistence.repository.AppointmentRepository
+import com.pos.PDPdb.persistence.repository.PatientRepository
 import com.pos.PDPdb.persistence.repository.PhysicianRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.web.PagedResourcesAssembler
@@ -14,7 +15,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,6 +25,8 @@ class PhysiciansController(
     private val _physicianModelAssembler: PhysicianModelAssembler,
     private val _pagedResourcesAssembler: PagedResourcesAssembler<PhysicianResponseDTO>,
     private val _appointmentRepository: AppointmentRepository,
+    private val _appointmentModelAssembler: AppointmentModelAssembler,
+    private val _patientRepository: PatientRepository,
 ) {
     @GetMapping("/")
     fun getAll(): ResponseEntity<Any> {
@@ -35,15 +37,22 @@ class PhysiciansController(
                 _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
                     WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getAll())
                         .withSelfRel()
+
+                ).add(
+                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansBySpecialization(null))
+                        .withRel("filterBySpecialization")
+                ).add(
+                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansByName(null))
+                        .withRel("filterByName")
                 )
             )
         }
     }
 
-    @GetMapping("")
+    @GetMapping(value = ["/"], params = ["page", "size"])
     fun getPaged(
         @RequestParam(required = true) page: Int,
-        @RequestParam(required = false, name = "items_per_page", defaultValue = "5") count: Int
+        @RequestParam(required = false, name = "size", defaultValue = "5") count: Int
     ): ResponseEntity<Any> {
         val physicians = _physicianRepository.findAll(PageRequest.of(page, count))
         return when {
@@ -58,19 +67,16 @@ class PhysiciansController(
     fun getPhysician(
         @PathVariable id: Int
     ): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                _physicianModelAssembler.toModel(
-                    _physicianRepository.findById(id).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }
-                        .toDTO()
-                )
-            )
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(_physicianModelAssembler.toModel(_physicianRepository.findById(id)
+                .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toDTO()))
     }
 
-    @GetMapping(params = ["specialization"])
+    @GetMapping(value = ["/"], params = ["specialization"])
     fun getPhysiciansBySpecialization(
-        @RequestParam specialization: String,
+        @RequestParam(required = true) specialization: String?,
     ): ResponseEntity<Any> {
-        val physicians = _physicianRepository.findBySpecializationStartingWith(specialization)
+        val physicians = _physicianRepository.findBySpecializationStartingWith(specialization!!)
         return when {
             physicians.none() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
             else -> ResponseEntity.status(HttpStatus.OK).body(
@@ -85,17 +91,17 @@ class PhysiciansController(
         }
     }
 
-    @GetMapping(params = ["name"])
+    @GetMapping(value = ["/"], params = ["name"])
     fun getPhysiciansByName(
-        @RequestParam name: String,
+        @RequestParam(required = true) name: String?,
     ): ResponseEntity<Any> {
-        val physicians = _physicianRepository.findByLastNameStartingWith(name)
+        val physicians = _physicianRepository.findByLastNameStartingWith(name!!)
         return when {
             physicians.none() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
             else -> ResponseEntity.status(HttpStatus.OK).body(
                 _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
                     WebMvcLinkBuilder.linkTo(
-                        WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansBySpecialization(name)
+                        WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansByName(name)
                     ).withSelfRel()
                 )
             )
@@ -147,40 +153,118 @@ class PhysiciansController(
         @RequestParam(required = false) date: String?
     ): ResponseEntity<Any> {
 
+        val appointments: Iterable<Appointment>
         if (date == null) {
-            return ResponseEntity.status(HttpStatus.OK)
-                .body(_appointmentRepository.findByIdPhysicianID(id).map { it.toDTO() })
-        } else return when (type) {
+            appointments = _appointmentRepository.findByIdPhysicianID(id)
+        } else when (type) {
             "day" -> {
                 val calendar = Calendar.getInstance()
                 calendar.set(Calendar.DATE, date.toInt())
-                val sqlDate = Date(calendar.time.time)
+                val sqlDate = calendar.time
 
-                ResponseEntity.status(HttpStatus.OK)
-                    .body(_appointmentRepository.findByIdPhysicianIDAndIdDate(id, sqlDate).map { it.toDTO() })
+                appointments = _appointmentRepository.findByPhysicianIDAndDate(id, sqlDate)
             }
 
             "month" -> {
                 val calendar = Calendar.getInstance()
                 calendar.set(Calendar.MONTH, date.toInt() - 1)
-                val sqlDate = Date(calendar.time.time)
-                print(calendar.toString())
-                ResponseEntity.status(HttpStatus.OK)
-                    .body(_appointmentRepository.findByIdPhysicianWithinAMonth(id, sqlDate).map { it.toDTO() })
+                val sqlDate = calendar.time
+
+                appointments = _appointmentRepository.findByIdPhysicianWithinAMonth(id, sqlDate)
             }
 
             null -> {
                 try {
-                    val sqlDate = Date(SimpleDateFormat("dd-MM-yyyy").parse(date).time)
+                    val sqlDate = SimpleDateFormat("dd-MM-yyyy").parse(date)
 
-                    ResponseEntity.status(HttpStatus.OK)
-                        .body(_appointmentRepository.findByIdPhysicianIDAndIdDate(id, sqlDate).map { it.toDTO() })
+                    appointments = _appointmentRepository.findByPhysicianIDAndDate(id, sqlDate)
                 } catch (e: IllegalArgumentException) {
-                    ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+                    throw ResponseStatusException(HttpStatus.BAD_REQUEST)
                 }
             }
 
-            else -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+            else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+        }
+
+        return when {
+            !appointments.none() -> ResponseEntity.status(HttpStatus.OK).body(
+                _appointmentModelAssembler.toCollectionModel(appointments.map { it.toDTO() }).add(
+                    WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(PhysiciansController::class.java)
+                            .getPhysicianAppointments(id, type, date)
+                    ).withSelfRel()
+                )
+            )
+
+            else -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        }
+    }
+
+    @GetMapping("/{physicianId}/patients/{patientId}")
+    fun getAppointment(
+        @PathVariable physicianId: Int, @PathVariable patientId: String, @RequestParam(required = true) date: String
+    ): ResponseEntity<Any> {
+        return try {
+            ResponseEntity.status(HttpStatus.OK).body(
+                _appointmentModelAssembler.toModel(
+                    _appointmentRepository.findByIdPatientIDAndIdPhysicianIDAndIdDate(
+                        patientId, physicianId, SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
+                    ).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toDTO()
+                )
+            )
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+        }
+    }
+
+    @PutMapping("/{physicianId}/patients/{patientId}")
+    fun updateAppointment(
+        @PathVariable physicianId: Int,
+        @PathVariable patientId: String,
+        @RequestParam(required = true) date: String,
+        @RequestBody appointmentDto: AppointmentUpdateDTO
+    ): ResponseEntity<Any> {
+        try {
+            val sqlDate = SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
+            val appointment = _appointmentRepository.findByIdPatientIDAndIdPhysicianIDAndIdDate(
+                patientId, physicianId, sqlDate
+            ).orElse(null)
+            return when (appointment) {
+                null -> {
+                    val patient = _patientRepository.findById(patientId)
+                        .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST) }
+                    val physician = _physicianRepository.findById(physicianId)
+                        .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST) }
+                    var newAppointment = Appointment(
+                        AppointmentsKey(patientId, physicianId, sqlDate), patient, physician, appointmentDto.status
+                    )
+                    newAppointment = _appointmentRepository.save(newAppointment)
+                    ResponseEntity.status(HttpStatus.CREATED).body(
+                        _appointmentModelAssembler.toModel(newAppointment.toDTO())
+                    )
+                }
+
+                else -> {
+                    appointment.status = appointmentDto.status
+                    val updatedAppointment = _appointmentRepository.save(appointment)
+                    ResponseEntity.status(HttpStatus.OK).body(
+                        _appointmentModelAssembler.toModel(updatedAppointment.toDTO())
+                    )
+                }
+            }
+        } catch (e: IllegalArgumentException) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        }
+    }
+
+    @DeleteMapping("/{physicianId}/patients/{patientId}")
+    fun deleteAppointment(
+        @PathVariable physicianId: Int, @PathVariable patientId: String, @RequestParam(required = true) date: String
+    ) {
+        try {
+            val sqlDate = SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
+            _appointmentRepository.deleteById(AppointmentsKey(patientId, physicianId, sqlDate))
+        } catch (_: IllegalArgumentException) {
         }
     }
 }

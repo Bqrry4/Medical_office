@@ -2,7 +2,7 @@ package com.pos.PDPdb.persistence.model
 
 import com.fasterxml.jackson.annotation.JsonValue
 import jakarta.persistence.*
-import java.sql.Date
+import java.util.Date
 
 
 enum class Status(val state: String) {
