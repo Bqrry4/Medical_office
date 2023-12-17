@@ -1,15 +1,11 @@
 package com.pos.PDPdb.persistence.model
 
 import jakarta.persistence.*
-import lombok.Getter
-import lombok.Setter
 import java.sql.Date
 
 @Entity
 @Table(name = "Patients")
-@Getter
-@Setter
-public class Patient (
+class Patient (
     @Id var cnp: String,
     @Column(name="id_user")
     var userID: Int,
@@ -26,5 +22,5 @@ public class Patient (
     var isActive: Boolean,
 
     @OneToMany(mappedBy = "patient")
-    var appointments: Set<Appointments>
+    var appointments: Set<Appointment>
 )

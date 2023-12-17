@@ -20,5 +20,5 @@ class Physician (
     var specialization: String,
 
     @OneToMany(mappedBy = "physician")
-    var appointments: Set<Appointments>
+    var appointments: Set<Appointment>
 )
