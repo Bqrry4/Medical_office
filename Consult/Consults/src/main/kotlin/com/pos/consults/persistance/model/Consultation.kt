@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field
 import java.util.*
 
 enum class Diagnostic(val state: String) {
-    HEALTHY("sanatos"),
+    HEALTHY("sănătos"),
     ILL("bolnav");
 
     @JsonValue
@@ -22,13 +22,13 @@ data class Consultation (
     @Id
     val id: ObjectId = ObjectId(),
     @Field(name="patientId")
-    val patientId : Int,
+    val patientId : String,
     @Field(name="physicianId")
     val physicianId: Int,
     @Field(name="data")
     val data: Date,
     @Field(name="diagnostic")
-    val diagnostic : Diagnostic?,
+    var diagnostic : Diagnostic?,
     @Field(name="investigations")
     val investigations: List<Investigation>
 )

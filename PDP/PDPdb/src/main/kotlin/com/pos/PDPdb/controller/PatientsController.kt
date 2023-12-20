@@ -7,7 +7,6 @@ import com.pos.PDPdb.persistence.model.Appointment
 import com.pos.PDPdb.persistence.model.AppointmentsKey
 import com.pos.PDPdb.persistence.repository.AppointmentRepository
 import com.pos.PDPdb.persistence.repository.PatientRepository
-import com.pos.PDPdb.persistence.repository.PhysicianRepository
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -64,7 +63,7 @@ class PatientsController(
             patient.firstName = patientDto.firstName
             patient.lastName = patientDto.lastName
             patient.phone = patientDto.phone
-            patient.birthDay = patientDto.birthDay
+            patient.birthDate = patientDto.birthDay
             patient.isActive = patientDto.isActive
             val updatedPatient = _patientRepository.save(patient)
             ResponseEntity.status(HttpStatus.OK).body(_patientModelAssembler.toModel(updatedPatient.toDTO()))
@@ -74,8 +73,13 @@ class PatientsController(
     @DeleteMapping("/{id}")
     fun disablePatient(
         @PathVariable id: String
-    ) {
-        _patientRepository.setPatientInactive(id)
+    ): ResponseEntity<Any> {
+        return if (_patientRepository.existsById(id)) {
+            _patientRepository.setPatientInactive(id)
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        } else {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        }
     }
 
     @GetMapping("/{id}/physicians")
@@ -130,6 +134,19 @@ class PatientsController(
 
             else -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
         }
+    }
 
+    @DeleteMapping("/{patientId}/physicians/{physicianId}")
+    fun deleteAppointment(
+        @PathVariable physicianId: Int, @PathVariable patientId: String, @RequestParam(required = true) date: String
+    ): ResponseEntity<Any> {
+        val sqlDate = SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
+        val apID = AppointmentsKey(patientId, physicianId, sqlDate)
+        return if (_appointmentRepository.existsById(apID)) {
+            _appointmentRepository.deleteById(apID)
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        } else {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        }
     }
 }

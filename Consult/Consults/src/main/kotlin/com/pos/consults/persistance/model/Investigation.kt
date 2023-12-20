@@ -8,11 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Field
 @Document
 data class Investigation (
     @Id
-    val id: ObjectId = ObjectId(),
+    val id: String,
     @Field(name="name")
-    val name : String,
+    var name : String,
     @Field(name="duration")
-    val duration: Int,
+    var duration: Int,
     @Field(name="result")
-    val result: String
+    var result: String
 )

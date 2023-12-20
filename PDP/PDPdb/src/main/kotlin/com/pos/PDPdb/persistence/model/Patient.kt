@@ -16,8 +16,8 @@ class Patient (
     @Column(unique=true)
     var email: String,
     var phone: String,
-    @Column(name="birth_day")
-    var birthDay: Date,
+    @Column(name="birth_date")
+    var birthDate: Date,
     @Column(name="is_active")
     var isActive: Boolean,
 

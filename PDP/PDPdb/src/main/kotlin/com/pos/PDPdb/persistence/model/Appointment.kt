@@ -22,7 +22,7 @@ class AppointmentsKey(
     var patientID: String,
     @Column(name = "id_physician")
     var physicianID: Int,
-    @Column(name = "data")
+    @Column(name = "ap_date")
     var date: Date
 )
 

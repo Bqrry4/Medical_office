@@ -3,7 +3,7 @@ package com.pos.PDPdb.dto
 import com.pos.PDPdb.persistence.model.Physician
 
 data class PhysicianRequestDTO (
-    var userId: Int,
+    var userID: Int,
     var lastName: String,
     var firstName: String,
     var email: String,
@@ -13,7 +13,7 @@ data class PhysicianRequestDTO (
 
 fun PhysicianRequestDTO.toEntity(id: Int) = Physician(
     physicianId = id,
-    userId = userId,
+    userID = userID,
     lastName = lastName,
     firstName = firstName,
     email = email,

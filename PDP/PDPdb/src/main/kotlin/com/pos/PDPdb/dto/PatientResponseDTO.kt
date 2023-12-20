@@ -21,6 +21,6 @@ fun Patient.toDTO() = PatientResponseDTO(
     firstName = firstName,
     email = email,
     phone = phone,
-    birthDay = birthDay,
+    birthDay = birthDate,
     isActive = isActive,
 )

@@ -4,7 +4,7 @@ import com.pos.PDPdb.persistence.model.Physician
 
 data class PhysicianResponseDTO (
     var physicianId: Int,
-    var userId: Int,
+    var userID: Int,
     var lastName: String,
     var firstName: String,
     var email: String,
@@ -14,7 +14,7 @@ data class PhysicianResponseDTO (
 
 fun Physician.toDTO() = PhysicianResponseDTO(
     physicianId = physicianId,
-    userId = userId,
+    userID = userID,
     lastName = lastName,
     firstName = firstName,
     email = email,

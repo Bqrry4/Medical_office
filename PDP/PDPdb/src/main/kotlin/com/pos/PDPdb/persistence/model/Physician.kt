@@ -9,7 +9,7 @@ class Physician (
     @Column(name="id_physician")
     @Id var physicianId: Int,
     @Column(name="id_user")
-    var userId: Int,
+    var userID: Int,
     @Column(name="last_name")
     var lastName: String,
     @Column(name="first_name")

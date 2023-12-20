@@ -127,7 +127,7 @@ class PhysiciansController(
         return when (val physician = _physicianRepository.findById(id).orElse(null)) {
             null -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()
             else -> {
-                physician.userId = physicianDto.userId
+                physician.userID = physicianDto.userID
                 physician.email = physicianDto.email
                 physician.firstName = physicianDto.firstName
                 physician.lastName = physicianDto.lastName
@@ -142,8 +142,13 @@ class PhysiciansController(
     @DeleteMapping("/{id}")
     fun removePhysician(
         @PathVariable id: Int
-    ) {
-        _physicianRepository.deleteById(id)
+    ): ResponseEntity<Any> {
+        return if (_physicianRepository.existsById(id)) {
+            _physicianRepository.deleteById(id)
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        } else {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        }
     }
 
     @GetMapping("/{id}/patients")
@@ -257,14 +262,4 @@ class PhysiciansController(
         }
     }
 
-    @DeleteMapping("/{physicianId}/patients/{patientId}")
-    fun deleteAppointment(
-        @PathVariable physicianId: Int, @PathVariable patientId: String, @RequestParam(required = true) date: String
-    ) {
-        try {
-            val sqlDate = SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
-            _appointmentRepository.deleteById(AppointmentsKey(patientId, physicianId, sqlDate))
-        } catch (_: IllegalArgumentException) {
-        }
-    }
 }
