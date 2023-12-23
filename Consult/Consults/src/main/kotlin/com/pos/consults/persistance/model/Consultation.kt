@@ -25,10 +25,10 @@ data class Consultation (
     val patientId : String,
     @Field(name="physicianId")
     val physicianId: Int,
-    @Field(name="data")
-    val data: Date,
+    @Field(name="date")
+    val date: Date,
     @Field(name="diagnostic")
     var diagnostic : Diagnostic?,
     @Field(name="investigations")
-    val investigations: List<Investigation>
+    val investigations: MutableList<Investigation>
 )

@@ -17,7 +17,7 @@ import java.sql.SQLTransientConnectionException
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(SQLTransientConnectionException::class)
-    fun handleSqlErr(ex: SQLException, request: WebRequest) : ResponseEntity<Any> {
+    fun handleSqlTriggerErr(ex: SQLException, request: WebRequest) : ResponseEntity<Any> {
         return handleExceptionInternal(
             ex, ex.message,
             HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request

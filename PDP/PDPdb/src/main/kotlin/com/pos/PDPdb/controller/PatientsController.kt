@@ -26,14 +26,9 @@ class PatientsController(
 
     @GetMapping("/")
     fun getAll(): ResponseEntity<Any> {
-        val patients = _patientRepository.findAll()
-        return when {
-            patients.isNotEmpty() -> ResponseEntity.status(HttpStatus.OK).body(
-                _patientModelAssembler.toCollectionModel(patients.map { it.toDTO() })
-            )
-
-            else -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+            _patientModelAssembler.toCollectionModel(_patientRepository.findAll().map { it.toDTO() })
+        )
     }
 
     @GetMapping("/{id}")
@@ -122,18 +117,14 @@ class PatientsController(
             else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST)
         }
 
-        return when {
-            !appointments.none() -> ResponseEntity.status(HttpStatus.OK).body(
-                _appointmentModelAssembler.toCollectionModel(appointments.map { it.toDTO() }).add(
-                    WebMvcLinkBuilder.linkTo(
-                        WebMvcLinkBuilder.methodOn(PatientsController::class.java)
-                            .getPatientAppointments(id, type, date)
-                    ).withSelfRel()
-                )
+        return ResponseEntity.status(HttpStatus.OK).body(
+            _appointmentModelAssembler.toCollectionModel(appointments.map { it.toDTO() }).add(
+                WebMvcLinkBuilder.linkTo(
+                    WebMvcLinkBuilder.methodOn(PatientsController::class.java)
+                        .getPatientAppointments(id, type, date)
+                ).withSelfRel()
             )
-
-            else -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-        }
+        )
     }
 
     @DeleteMapping("/{patientId}/physicians/{physicianId}")

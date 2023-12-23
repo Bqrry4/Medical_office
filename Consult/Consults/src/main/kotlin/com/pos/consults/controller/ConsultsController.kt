@@ -1,159 +1,105 @@
 package com.pos.consults.controller
 
+import com.pos.consults.component.ConsultModelAssembler
 import com.pos.consults.dto.ConsultationRequestDTO
-import com.pos.consults.dto.InvestigationDTO
 import com.pos.consults.dto.toDTO
 import com.pos.consults.persistance.model.Consultation
-import com.pos.consults.persistance.model.Diagnostic
 import com.pos.consults.persistance.model.Investigation
 import com.pos.consults.persistance.repository.ConsultationRepository
-import com.pos.consults.persistance.repository.InvestigationRepository
+import com.pos.consults.services.ConsultCollectionService
+import com.pos.consults.utils.Utils
+import jakarta.servlet.http.HttpServletRequest
 import org.bson.types.ObjectId
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/physicians")
 class ConsultsController(
-    private val _consultationRepository: ConsultationRepository,
-    private val investigationRepository: InvestigationRepository
+    private val _consultationService: ConsultCollectionService,
+    private val _consultModelAssembler: ConsultModelAssembler
 ) {
 
-//    @GetMapping("/")
-//    fun getConsultations(): ResponseEntity<Any> {
-//        val consultations = _consultationRepository.findAll()
-//        return when {
-//            consultations.isEmpty() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-//            else -> ResponseEntity.status(HttpStatus.OK).body(
-//                (consultations.map { it.toDTO() })
-//            )
-//        }
-//    }
+    @GetMapping("/")
+    fun test() {
 
-    @GetMapping("/{physicianID}/patients")
-    fun getPhysicianConsultations(
-        @PathVariable physicianID: Int
-    ): ResponseEntity<Any> {
-        val consultations = _consultationRepository.findAllByPhysicianId(physicianID)
-        return when {
-            consultations.isEmpty() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-            else -> ResponseEntity.status(HttpStatus.OK).body(
-                (consultations.map { it.toDTO() })
-            )
-        }
+        val list = mutableListOf<Investigation>()
+        list.add(Investigation(id = ObjectId().toHexString(), description = "cc", duration = 3, result = "c"))
+        list.add(Investigation(id = ObjectId().toHexString(), description = "cc", duration = 3, result = "cc"))
+        val a = Consultation(
+            patientId = "1",
+            physicianId = 1,
+            diagnostic = null,
+            date = Utils.parseDatetime("23-12-2023-12:00"),
+            investigations = list
+        )
+//        _consultationService.insert(a)
+
     }
 
-    @GetMapping("/{physicianID}/patients/{physicianID}")
+    @GetMapping("/physicians/{physicianID}/patients/{patientID}/date/{date}/consult")
     fun getOneConsultation(
-        @PathVariable(required = true) patientID: String,
         @PathVariable(required = true) physicianID: Int,
-        @RequestParam(required = true) date: String
+        @PathVariable(required = true) patientID: String,
+        @PathVariable(required = true) date: String
     ): ResponseEntity<Any> {
-        return try {
-            ResponseEntity.status(HttpStatus.OK).body(
-                //_appointmentModelAssembler.toModel(
-                _consultationRepository.findByPatientIdAndPhysicianIdAndData(
-                    patientID, physicianID, SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
-                ).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toDTO()
+        val consult = _consultationService.getConsult(
+            physicianID, patientID, Utils.parseDatetime(date)
+        ) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+            _consultModelAssembler.toModel(
+                consult.toDTO()
             )
-            //)
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
-        }
+        )
     }
 
-    @PutMapping("/{physicianID}/patients/{physicianID}")
+    @PutMapping("/physicians/{physicianID}/patients/{patientID}/date/{date}/consult")
     fun updateConsultation(
-        @PathVariable(required = true) patientID: String,
         @PathVariable(required = true) physicianID: Int,
-        @RequestParam(required = true) date: String,
+        @PathVariable(required = true) patientID: String,
+        @PathVariable(required = true) date: String,
         @RequestBody consultationDto: ConsultationRequestDTO
     ): ResponseEntity<Any> {
-        try {
-            val sqlDate = SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
-            val consultation = _consultationRepository.findByPatientIdAndPhysicianIdAndData(
-                patientID, physicianID, sqlDate
-            ).orElse(null)
-            return when (consultation) {
-                null -> {
-                    var newConsultation = Consultation(
-                        ObjectId(), patientID, physicianID, sqlDate, null, emptyList()
-                    )
-                    newConsultation = _consultationRepository.save(newConsultation)
-                    ResponseEntity.status(HttpStatus.CREATED).body(
-                        /*_appointmentModelAssembler.toModel*/(newConsultation.toDTO())
-                    )
-                }
-                else -> {
-                    consultation.diagnostic = consultationDto.diagnostic
-                    val updatedConsultation = _consultationRepository.save(consultation)
-                    ResponseEntity.status(HttpStatus.OK).body(
-                        /*_appointmentModelAssembler.toModel*/(updatedConsultation.toDTO())
-                    )
-                }
+        val dbDate = Utils.parseDatetime(date)
+        val consultation = _consultationService.getConsult(
+            physicianID, patientID, dbDate
+        )
+        return when (consultation) {
+            null -> {
+                val newConsultation =
+                    _consultationService.createConsult(physicianID, patientID, dbDate, consultationDto)
+                ResponseEntity.status(HttpStatus.CREATED).body(
+                    _consultModelAssembler.toModel(newConsultation.toDTO())
+                )
             }
-        } catch (e: IllegalArgumentException) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+
+            else -> {
+                val updatedConsultation = _consultationService.updateConsult(consultation, consultationDto)
+                ResponseEntity.status(HttpStatus.OK).body(
+                    _consultModelAssembler.toModel(updatedConsultation.toDTO())
+                )
+            }
         }
     }
 
-    @DeleteMapping(value = ["/"], params = ["patientID", "physicianID", "date"])
+    @DeleteMapping("/physicians/{physicianID}/patients/{patientID}/date/{date}/consult")
     fun deleteAppointment(
         @PathVariable(required = true) patientID: String,
         @PathVariable(required = true) physicianID: Int,
-        @RequestParam(required = true) date: String
-    ) {
-        try {
-            _consultationRepository.deleteByPatientIdAndPhysicianIdAndData(patientID, physicianID, SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date))
-        } catch (_: IllegalArgumentException) {
-        }
-    }
-
-    @GetMapping(value = ["/investigation"], params = ["patientID", "physicianID", "date"])
-    fun getInvestigations(
-        @RequestParam(required = true) patientID: String,
-        @RequestParam(required = true) physicianID: Int,
-        @RequestParam(required = true) date: String,
+        @PathVariable(required = true) date: String
     ): ResponseEntity<Any> {
-        return try {
-            ResponseEntity.status(HttpStatus.OK).body(
-                //_appointmentModelAssembler.toModel(
-                _consultationRepository.findByPatientIdAndPhysicianIdAndData(
-                    patientID, physicianID, SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
-                ).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toDTO()
-            )
-            //)
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
-        }
+        val consult = _consultationService.getConsult(
+            physicianID,
+            patientID,
+            Utils.parseDatetime(date)
+        )
+        return consult?.let {
+            _consultationService.deleteConsult(consult)
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        } ?: ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+
     }
-
-    @GetMapping(value = ["/investigation/{id}"])
-    fun getInv(
-        @PathVariable id: String
-    ): Investigation? {
-        val a = investigationRepository.findById(id).orElse(null)
-        println(a)
-        return a
-    }
-
-    @PutMapping(value = ["/investigation/{id}"])
-    fun replaceInv(
-        @PathVariable id: String,
-        @RequestBody body: InvestigationDTO
-    ): Investigation? {
-        val a = investigationRepository.findById(id).orElse(null)
-        a.name = body.name
-        investigationRepository.save(a)
-
-        println(a)
-        return a
-    }
-
-
-
 }

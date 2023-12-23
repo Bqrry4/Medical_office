@@ -31,8 +31,8 @@ Create Table Appointments(
 	ap_date datetime,
 	status ENUM('onorată', 'neprezentat', 'anulată'),
 	Constraint fk_id_patient foreign key (id_patient) references Patients(cnp),
-	Constraint fk_id_physician foreign key (id_physician) references Physicians(id_physician),
-	PRIMARY KEY (id_patient, id_physician, ap_date)
+	Constraint fk_id_physician foreign key (id_physician) references Physicians(id_physician) ON DELETE CASCADE,
+	Primary key (id_patient, id_physician, ap_date)
 );
 
 
@@ -81,12 +81,20 @@ Create trigger pdate_overlap_inserted_check
 	for each row
 	begin 
 	
-	if (
+	if ((
 	   Select COUNT(ap_date) from Appointments a
 	   Where a.id_physician = new.id_physician
 	   and a.ap_date <= new.ap_date + interval 15 minute 
 	   and a.ap_date >= new.ap_date - interval 15 minute
-	) > 0  then
+	) > 0
+	or
+	(
+	   Select COUNT(ap_date) from Appointments a
+	   Where a.id_patient = new.id_patient
+	   and a.ap_date <= new.ap_date + interval 15 minute 
+	   and a.ap_date >= new.ap_date - interval 15 minute
+	) > 0)
+	  then
 	SIGNAL SQLSTATE '45000' set MESSAGE_TEXT = 'Appointment time is overlapping with other appointments!';
 	end if;
 	
@@ -105,12 +113,20 @@ Create trigger pdate_overlap_update_check
 	before update on Appointments
 	for each row
 	begin 
-	if (
+	if ((
 	   Select COUNT(ap_date) from Appointments a
 	   Where a.id_physician = new.id_physician
 	   and a.ap_date <= new.ap_date + interval 15 minute 
 	   and a.ap_date >= new.ap_date - interval 15 minute
-	) > 0  then
+	) > 0
+	or
+	(
+	   Select COUNT(ap_date) from Appointments a
+	   Where a.id_patient = new.id_patient
+	   and a.ap_date <= new.ap_date + interval 15 minute 
+	   and a.ap_date >= new.ap_date - interval 15 minute
+	) > 0)
+	  then
 	SIGNAL SQLSTATE '45000' set MESSAGE_TEXT = 'Appointment time is overlapping with other appointments!';
 	end if;
 	

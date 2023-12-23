@@ -1,19 +1,29 @@
 package com.pos.consults.dto
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import com.pos.consults.persistance.model.Investigation
-import org.bson.types.ObjectId
 
-class InvestigationDTO (
+class InvestigationResponseDTO (
     val id: String,
-    val name : String,
+    val description : String,
     val duration: Int,
     val result: String
 )
-fun Investigation.toDTO() = InvestigationDTO(
+fun Investigation.toDTO() = InvestigationResponseDTO(
     id = id,
-    name = name,
+    description = description,
+    duration = duration,
+    result = result
+)
+
+class InvestigationRequestDTO (
+    val description : String,
+    val duration: Int,
+    val result: String
+)
+
+fun InvestigationRequestDTO.toEntity(id: String) = Investigation(
+    id = id,
+    description = description,
     duration = duration,
     result = result
 )

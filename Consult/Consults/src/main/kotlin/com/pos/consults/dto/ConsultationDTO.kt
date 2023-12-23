@@ -9,15 +9,15 @@ data class ConsultationResponseDTO (
     val patientId : String,
     val physicianId: Int,
     @JsonFormat(pattern="HH:mm dd-MM-yyyy")
-    val data: Date,
+    val date: Date,
     val diagnostic : Diagnostic?,
-    val investigations: List<InvestigationDTO>
+    val investigations: List<InvestigationResponseDTO>
 )
 
 fun Consultation.toDTO() = ConsultationResponseDTO(
     patientId = patientId,
     physicianId = physicianId,
-    data = data,
+    date = date,
     diagnostic = diagnostic,
     investigations = investigations.map { x -> x.toDTO()}
 )

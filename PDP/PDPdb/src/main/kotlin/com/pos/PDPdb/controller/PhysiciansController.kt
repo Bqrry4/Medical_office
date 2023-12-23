@@ -31,22 +31,23 @@ class PhysiciansController(
     @GetMapping("/")
     fun getAll(): ResponseEntity<Any> {
         val physicians = _physicianRepository.findAll()
-        return when {
-            physicians.isEmpty() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-            else -> ResponseEntity.status(HttpStatus.OK).body(
-                _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
-                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getAll())
-                        .withSelfRel()
+        return ResponseEntity.status(HttpStatus.OK).body(
+            _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getAll())
+                    .withSelfRel()
 
-                ).add(
-                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansBySpecialization(null))
-                        .withRel("filterBySpecialization")
-                ).add(
-                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansByName(null))
-                        .withRel("filterByName")
+            ).add(
+                WebMvcLinkBuilder.linkTo(
+                    WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansBySpecialization(null)
                 )
+                    .withRel("filterBySpecialization")
+            ).add(
+                WebMvcLinkBuilder.linkTo(
+                    WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansByName(null)
+                )
+                    .withRel("filterByName")
             )
-        }
+        )
     }
 
     @GetMapping(value = ["/"], params = ["page", "size"])
@@ -68,8 +69,12 @@ class PhysiciansController(
         @PathVariable id: Int
     ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK)
-            .body(_physicianModelAssembler.toModel(_physicianRepository.findById(id)
-                .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toDTO()))
+            .body(
+                _physicianModelAssembler.toModel(
+                    _physicianRepository.findById(id)
+                        .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toDTO()
+                )
+            )
     }
 
     @GetMapping(value = ["/"], params = ["specialization"])
