@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package com.pos.grpc.auth;
+
+service IdentityManagementService{
+    rpc Auth(UserDetails) returns (Token) {}
+    rpc Validate(Token) returns (IdentityResponse) {}
+}
+
+message UserDetails{
+    string username = 1;
+    string password = 2;
+}
+
+message IdentityResponse{
+    int64 user_id = 1;
+    string role = 2;
+}
+
+message Token{
+    string token = 1;
+}
