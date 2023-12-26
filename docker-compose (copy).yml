@@ -1,0 +1,69 @@
+services:
+  mariadb-pdp:
+    image: mariadb:latest
+    ports:
+      - "3306"
+    volumes:
+      - ./PDP/MariaDB/InitDB.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: pos
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+      TZ: Europe/Bucharest
+    networks:
+      - pdp_net
+
+  mongodb-consult:
+    image: mongo:latest
+    ports:
+      - "27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
+      MONGO_INITDB_DATABASE: pos
+      TZ: Europe/Bucharest
+    networks:
+      - consult_net
+
+  mariadb-idm:
+    image: mariadb:latest
+    ports:
+      - "3306"
+    volumes:
+      - ./IDM/MariaDB/InitDB.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      MARIADB_ROOT_PASSWORD: password
+      MARIADB_DATABASE: IDM
+      MARIADB_USER: user
+      MARIADB_PASSWORD: pass
+      TZ: Europe/Bucharest
+    networks:
+      - idm_net
+
+  redis_idm:
+    image: redis:latest
+    ports:
+      - "6379"
+    networks:
+      - idm_net
+
+  pdp:
+    image: amazoncorretto:17
+    depends_on:
+      - mariadb-pdp
+    volumes:
+      - ./PDP/PDPdb/target:/usr/src/app
+    command: bash -c "cd /usr/src/app && java -jar PDP-1.0-SNAPSHOT.jar"
+    ports:
+      - "50001"
+    networks:
+      - pdp_net
+      - gateway_net
+      
+
+networks:
+  pdp_net:
+  consult_net:
+  idm_net:
+  gateway_net:

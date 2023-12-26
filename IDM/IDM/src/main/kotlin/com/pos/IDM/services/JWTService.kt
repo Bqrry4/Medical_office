@@ -69,8 +69,7 @@ class JWTService : Serializable {
     }
 
 
-    fun validateToken(token: String): Claims {
-
+    fun parseToken(token: String): Claims {
         val jwt: Jws<Claims> = Jwts.parser()
             .verifyWith(secretKey)
             .requireIssuer("com.pos.IDM")

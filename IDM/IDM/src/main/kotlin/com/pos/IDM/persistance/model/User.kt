@@ -13,6 +13,7 @@ enum class Role {
 @Table(name = "Users")
 class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userID")
     @Id val id: Long,
     var username: String,
     var password: String,
