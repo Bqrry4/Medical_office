@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package com.pos.grpc.auth;
+
+import "google/protobuf/empty.proto";
+
+service IdentityManagementService{
+    rpc Auth(UserAuthDetails) returns (Token) {}
+    rpc Register(UserRegisterDetails) returns (UserId) {}
+    rpc Validate(Token) returns (IdentityResponse) {}
+    rpc Invalidate(Token) returns (google.protobuf.Empty) {}
+    rpc DeleteUser(UserId) returns (google.protobuf.Empty) {}
+}
+
+message UserAuthDetails{
+    string username = 1;
+    string password = 2;
+}
+
+message UserRegisterDetails{
+    string username = 1;
+    string password = 2;
+    string role = 3;
+}
+
+message IdentityResponse{
+    int64 user_id = 1;
+    string role = 2;
+}
+
+message Token{
+    string token = 1;
+}
+
+message UserId
+{
+    int64 user_id = 1;
+}
+
+message ErrorResponse {
+    string error_message = 1;
+}

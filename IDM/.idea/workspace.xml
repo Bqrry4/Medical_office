@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="155e8ea5-94d2-4acd-bfd0-27c772c91482" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/IDM/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/IDM/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/persistance/model/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/persistance/model/User.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/services/IdentityManagementService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/services/IdentityManagementService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/services/JWTService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/services/JWTService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/proto/auth.proto" beforeDir="false" afterPath="$PROJECT_DIR$/IDM/src/main/proto/auth.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/IDM/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MariaDB/InitDB.sql" beforeDir="false" afterPath="$PROJECT_DIR$/MariaDB/InitDB.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/controller/AuthController.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/UserLoginDto.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,15 +36,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;proiect&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/bqrry/Desktop/POS/Proiect/Prot/activitate-proiect-laborator-2023-2024-Bqrry4/IDM/IDM&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "proiect",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/bqrry/Desktop/POS/Proiect/Prot/activitate-proiect-laborator-2023-2024-Bqrry4/IDM"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
