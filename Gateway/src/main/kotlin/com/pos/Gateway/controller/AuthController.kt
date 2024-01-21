@@ -1,31 +1,33 @@
 package com.pos.Gateway.controller
 
+import com.pos.Gateway.dto.PatientRequestDto
+import com.pos.Gateway.dto.PhysicianRequestDto
 import com.pos.Gateway.dto.UserLoginDto
 import com.pos.grpc.auth.Auth
-import com.pos.grpc.auth.IdentityManagementServiceGrpc.IdentityManagementServiceBlockingStub
-import com.pos.grpc.auth.IdentityManagementServiceGrpc.IdentityManagementServiceStub
-import jakarta.servlet.ServletRequest
+import com.pos.grpc.auth.IdentityManagementServiceGrpc
 import jakarta.servlet.http.HttpServletRequest
 import net.devh.boot.grpc.client.inject.GrpcClient
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.http.HttpHeaders
+import org.springframework.web.bind.annotation.*
 
-@Controller
+@RestController
+@RequestMapping("/api")
 class AuthController(
-    @GrpcClient("gRPC server name")
-    private val _authStub : IdentityManagementServiceBlockingStub
+    @GrpcClient("idm-pos")
+    private val _authStub : IdentityManagementServiceGrpc.IdentityManagementServiceBlockingStub
 ) {
+
     @PostMapping("/login")
     fun login(
         @RequestBody userDetails: UserLoginDto
     )
     {
-        val token = _authStub.auth(Auth.UserAuthDetails.newBuilder()
-            .setUsername(userDetails.username)
-            .setPassword(userDetails.password)
-            .build()).token
+        val token = _authStub.auth(
+            Auth.UserAuthDetails.newBuilder()
+                .setUsername(userDetails.username)
+                .setPassword(userDetails.password)
+                .build()).token
+        print(token)
     }
 
     @GetMapping("/logout")
@@ -35,9 +37,23 @@ class AuthController(
         _authStub.invalidate(Auth.Token.newBuilder().setToken(token).build());
     }
 
-    //register user and doctor should make a difference
     @PostMapping("/register")
-    fun register()
+    fun registerPatient(
+        @RequestBody patientRequestDto: PatientRequestDto
+    )
+    {
+        _authStub.register(Auth.UserRegisterDetails.newBuilder()
+            .setUsername("")
+            .setPassword("")
+            .setRole("")
+            .build())
+    }
+
+    @PostMapping("/register", headers = ["Authorization"])
+    fun registerPhysician(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
+        @RequestBody physicianRequestDto: PhysicianRequestDto
+    )
     {
         _authStub.register(Auth.UserRegisterDetails.newBuilder()
             .setUsername("")

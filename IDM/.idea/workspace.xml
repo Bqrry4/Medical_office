@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="155e8ea5-94d2-4acd-bfd0-27c772c91482" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/controller/AuthController.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/UserLoginDto.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/config/InterceptorConfig.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/config/RoutingConfig.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/config/interceptors/PDPInterceptor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/config/interceptors/RequestFilter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/PatientRequestDto.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/PhysicianRequestDto.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Gateway/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/controller/AuthController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/controller/AuthController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Gateway/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../Gateway/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
