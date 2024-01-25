@@ -5,91 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2ee903f-0358-44ee-8d90-eeeb7a565faa" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/config/RestTemplateConfig.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/ClientResponseErrorMessageDto.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/PatientRegisterDto.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/PhysicianRegisterDto.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/pdp/PatientRequestDto.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/ConsultsApplication.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/component/ConsultModelAssembler.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/component/InvestigationModelAssembler.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/config/TimeZoneConfig.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/controller/ConsultsController.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/controller/GlobalExceptionHandler.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/controller/InvestigationController.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/dto/ConsultationDTO.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/dto/InvestigationDTO.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/persistance/model/Consultation.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/persistance/model/Investigation.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/persistance/repository/Repositories.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/services/ConsultCollectionService.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/kotlin/com/pos/consults/utils/Utils.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/Consults/src/test/kotlin/com/pos/consults/ConsultsApplicationTests.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Consult/MongoDB/mongoDB" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Gateway/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/controller/MedicalOfficeController.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/service/AuthValidateService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/config/RoutingConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/config/RoutingConfig.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/controller/AuthController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/controller/AuthController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/PatientRequestDto.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/PhysicianRequestDto.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/IdmApplication.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/config/RedisConfig.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/config/ScheduleConfig.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/persistance/model/InvalidTokensEntry.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/persistance/model/User.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/persistance/repository/InvalidTokensRepository.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/persistance/repository/UserRepository.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/services/IdentityManagementService.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/kotlin/com/pos/IDM/services/JWTService.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/proto/auth.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IDM/src/test/kotlin/com/pos/IDM/IdmApplicationTests.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MariaDB/InitDB.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MariaDB/mariaDB" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/MariaDB/InitDB.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/MariaDB/mariaDB" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/PdPdbApplication.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/component/AppointmentModelAssembler.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/component/PatientModelAssembler.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/component/PhysicianModelAssembler.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/config/TimeZoneConfig.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/controller/GlobalExceptionHandler.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/controller/PatientsController.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/controller/PhysiciansController.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/dto/AppointmentDTO.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/dto/PatientRequestDTO.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/dto/PatientResponseDTO.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/dto/PhysicianRequestDTO.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/dto/PhysicianResponseDTO.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/persistence/model/Appointment.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/persistence/model/Patient.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/persistence/model/Physician.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/persistence/repository/Repositories.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/kotlin/com/pos/PDPdb/persistence/repository/RepositoriesTests.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/PDPdb/src/test/kotlin/com/pos/PDPdb/PdPdbApplicationTests.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/pos/IDM/services/IdentityManagementService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/pos/IDM/services/IdentityManagementService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/PatientsController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/PatientsController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/PhysiciansController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/PhysiciansController.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,23 +50,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Unnamed.executor": "Run",
-    "JUnit.GrpcClientTest.register_ShouldReturnToken.executor": "Run",
-    "Kotlin.IdmApplicationKt.executor": "Run",
-    "Maven.IDM [clean].executor": "Run",
-    "Maven.IDM [compile].executor": "Run",
-    "Maven.IDM [package].executor": "Run",
-    "Maven.IDM [validate].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "proiect",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/bqrry/Desktop/POS/Proiect/Prot/activitate-proiect-laborator-2023-2024-Bqrry4/IDM",
-    "settings.editor.selected.configurable": "preferences.general"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.GrpcClientTest.register_ShouldReturnToken.executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.IdmApplicationKt.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.IDM [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.IDM [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.IDM [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.IDM [validate].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;proiect&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/bqrry/Desktop/POS/Proiect/Prot/activitate-proiect-laborator-2023-2024-Bqrry4/IDM&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="com.pos.IDM.services" />

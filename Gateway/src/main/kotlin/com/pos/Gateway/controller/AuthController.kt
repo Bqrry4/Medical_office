@@ -5,8 +5,11 @@ import com.pos.Gateway.dto.PatientRegisterDto
 import com.pos.Gateway.dto.PhysicianRegisterDto
 import com.pos.Gateway.dto.UserLoginDto
 import com.pos.Gateway.dto.pdp.PatientRequestDTO
+import com.pos.Gateway.dto.pdp.PhysicianRequestDTO
+import com.pos.Gateway.service.AuthValidateService
 import com.pos.grpc.auth.Auth
 import com.pos.grpc.auth.IdentityManagementServiceGrpc
+import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import jakarta.servlet.http.HttpServletRequest
 import net.devh.boot.grpc.client.inject.GrpcClient
@@ -14,6 +17,7 @@ import org.springframework.http.*
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.exchange
 
 
 @RestController
@@ -21,7 +25,8 @@ import org.springframework.web.client.RestTemplate
 class AuthController(
     @GrpcClient("idm-pos")
     private val _authStub : IdentityManagementServiceGrpc.IdentityManagementServiceBlockingStub,
-    private val _restTemplate: RestTemplate
+    private val _restTemplate: RestTemplate,
+    private val _authValidateService: AuthValidateService
 ) {
 
 //    val pdpServiceLocation = "http://pdp-service:8080"
@@ -39,18 +44,18 @@ class AuthController(
                     .setPassword(userDetails.password)
                     .build()).token
         }.getOrElse {
-            when(it)
+            return when(it)
             {
                 is StatusRuntimeException ->
                 {
-                    return if(it.message == "NOT_FOUND")
+                     if(it.status == Status.NOT_FOUND)
                         ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                             ClientResponseErrorMessageDto("Invalid credentials"))
                     else
                         ResponseEntity.badRequest().build()
 
                 }
-                else -> return ResponseEntity.internalServerError().build()
+                else -> ResponseEntity.internalServerError().build()
             }
         }
 
@@ -86,11 +91,28 @@ class AuthController(
         )
 
         //register in idm
-        val userId = _authStub.register(Auth.UserRegisterDetails.newBuilder()
-            .setUsername(patientRequestDto.username)
-            .setPassword(patientRequestDto.password)
-            .setRole("patient")
-            .build()).userId
+        val userId =
+            kotlin.runCatching {
+                _authStub.register(Auth.UserRegisterDetails.newBuilder()
+                .setUsername(patientRequestDto.username)
+                .setPassword(patientRequestDto.password)
+                .setRole("patient")
+                .build()).userId
+            }.getOrElse {
+
+                return when(it)
+                {
+                    is StatusRuntimeException -> {
+                        if(it.status == Status.ALREADY_EXISTS)
+                            ResponseEntity.status(HttpStatus.CONFLICT).body(
+                                ClientResponseErrorMessageDto("Username taken"))
+                        else
+                            ResponseEntity.badRequest().build()
+                    }
+
+                    else -> ResponseEntity.internalServerError().build()
+                }
+            }
 
         val request = HttpEntity<PatientRequestDTO>(
             PatientRequestDTO(userId.toInt(),
@@ -129,13 +151,75 @@ class AuthController(
     fun registerPhysician(
         @RequestHeader(HttpHeaders.AUTHORIZATION) bearerToken: String,
         @RequestBody physicianRequestDto: PhysicianRegisterDto
-    )
+    ): ResponseEntity<Any>
     {
-        _authStub.register(Auth.UserRegisterDetails.newBuilder()
-            .setUsername("")
-            .setPassword("")
-            .setRole("")
-            .build())
+
+        val identity = kotlin.runCatching {
+            _authValidateService.validateToken(bearerToken)
+        }.getOrElse {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        }
+
+        //Only admin can register physicians
+        if(identity.role != "admin")
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+
+
+        //register in idm
+        val userId =
+            kotlin.runCatching {
+                _authStub.register(Auth.UserRegisterDetails.newBuilder()
+                    .setUsername(physicianRequestDto.username)
+                    .setPassword(physicianRequestDto.password)
+                    .setRole("physician")
+                    .build()).userId
+            }.getOrElse {
+
+                return when(it)
+                {
+                    is StatusRuntimeException -> {
+                        if(it.status == Status.ALREADY_EXISTS)
+                            ResponseEntity.status(HttpStatus.CONFLICT).body(
+                                ClientResponseErrorMessageDto("Username taken"))
+                        else
+                            ResponseEntity.badRequest().build()
+                    }
+
+                    else -> ResponseEntity.internalServerError().build()
+                }
+            }
+
+        val request = HttpEntity<PhysicianRequestDTO>(
+            PhysicianRequestDTO(userId.toInt(),
+                physicianRequestDto.lastName,
+                physicianRequestDto.firstName,
+                physicianRequestDto.email,
+                physicianRequestDto.phone,
+                physicianRequestDto.specialization)
+            , null)
+
+        //create resource in pdp
+        kotlin.runCatching {
+            _restTemplate.postForLocation("$pdpServiceLocation/api/medical_office/patients/", request)
+        }.getOrElse {
+
+            //on error revert the register, it should not raise a status exception
+            _authStub.deleteUser(Auth.UserId.newBuilder().setUserId(userId).build())
+
+            return when(it)
+            {
+                is HttpClientErrorException.Conflict -> ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(ClientResponseErrorMessageDto( it.responseBodyAsString))
+
+                is HttpClientErrorException.UnprocessableEntity -> ResponseEntity
+                    .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body(ClientResponseErrorMessageDto( it.responseBodyAsString))
+
+                else -> ResponseEntity.internalServerError().build()
+            }
+        }
+        return ResponseEntity.noContent().build()
     }
 
 }

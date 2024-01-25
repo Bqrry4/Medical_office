@@ -241,19 +241,8 @@ class PhysiciansController(
             ).orElse(null)
             return when (appointment) {
                 null -> {
-                    val patient = _patientRepository.findById(patientId)
-                        .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST) }
-                    val physician = _physicianRepository.findById(physicianId)
-                        .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST) }
-                    var newAppointment = Appointment(
-                        AppointmentsKey(patientId, physicianId, sqlDate), patient, physician, appointmentDto.status
-                    )
-                    newAppointment = _appointmentRepository.save(newAppointment)
-                    ResponseEntity.status(HttpStatus.CREATED).body(
-                        _appointmentModelAssembler.toModel(newAppointment.toDTO())
-                    )
+                    ResponseEntity.status(HttpStatus.FORBIDDEN).build()
                 }
-
                 else -> {
                     appointment.status = appointmentDto.status
                     val updatedAppointment = _appointmentRepository.save(appointment)

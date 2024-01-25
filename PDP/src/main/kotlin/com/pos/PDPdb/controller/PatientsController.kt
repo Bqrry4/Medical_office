@@ -5,8 +5,10 @@ import com.pos.PDPdb.component.PatientModelAssembler
 import com.pos.PDPdb.dto.*
 import com.pos.PDPdb.persistence.model.Appointment
 import com.pos.PDPdb.persistence.model.AppointmentsKey
+import com.pos.PDPdb.persistence.model.Status
 import com.pos.PDPdb.persistence.repository.AppointmentRepository
 import com.pos.PDPdb.persistence.repository.PatientRepository
+import com.pos.PDPdb.persistence.repository.PhysicianRepository
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,6 +21,7 @@ import java.util.*
 @RequestMapping("/patients")
 class PatientsController(
     private val _patientRepository: PatientRepository,
+    private val _physicianRepository: PhysicianRepository,
     private val _patientModelAssembler: PatientModelAssembler,
     private val _appointmentRepository: AppointmentRepository,
     private val _appointmentModelAssembler: AppointmentModelAssembler
@@ -126,6 +129,42 @@ class PatientsController(
             )
         )
     }
+
+    @PutMapping("/{patientId}/physicians/{physicianId}")
+    fun createAppointment(
+        @PathVariable physicianId: Int,
+        @PathVariable patientId: String,
+        @RequestParam(required = true) date: String
+    ): ResponseEntity<Any> {
+        try {
+            val sqlDate = SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
+            val appointment = _appointmentRepository.findByIdPatientIDAndIdPhysicianIDAndIdDate(
+                patientId, physicianId, sqlDate
+            ).orElse(null)
+            return when (appointment) {
+                null -> {
+                    val patient = _patientRepository.findById(patientId)
+                        .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST) }
+                    val physician = _physicianRepository.findById(physicianId)
+                        .orElseThrow { ResponseStatusException(HttpStatus.BAD_REQUEST) }
+                    var newAppointment = Appointment(
+                        AppointmentsKey(patientId, physicianId, sqlDate), patient, physician, Status.NOT_COMMITTED
+                    )
+                    newAppointment = _appointmentRepository.save(newAppointment)
+                    ResponseEntity.status(HttpStatus.CREATED).body(
+                        _appointmentModelAssembler.toModel(newAppointment.toDTO())
+                    )
+                }
+
+                else -> {
+                    ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+                }
+            }
+        } catch (e: IllegalArgumentException) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        }
+    }
+
 
     @DeleteMapping("/{patientId}/physicians/{physicianId}")
     fun deleteAppointment(

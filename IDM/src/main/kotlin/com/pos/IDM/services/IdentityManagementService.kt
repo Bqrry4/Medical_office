@@ -59,7 +59,11 @@ class IdentityManagementService(
             id = 0
         )
 
-        newUser = _userRepository.save(newUser)
+        kotlin.runCatching {
+            newUser = _userRepository.save(newUser)
+        }.onFailure {
+            throw Status.ALREADY_EXISTS.asException()
+        }
 
         return Auth.UserId.newBuilder()
             .setUserId(newUser.id)
