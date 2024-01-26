@@ -1,6 +1,6 @@
 package com.pos.PDPdb.controller
 
-import com.pos.PDPdb.component.AppointmentModelAssembler
+import com.pos.PDPdb.component.AppointmentForPatientModelAssembler
 import com.pos.PDPdb.component.PatientModelAssembler
 import com.pos.PDPdb.dto.*
 import com.pos.PDPdb.persistence.model.Appointment
@@ -9,6 +9,8 @@ import com.pos.PDPdb.persistence.model.Status
 import com.pos.PDPdb.persistence.repository.AppointmentRepository
 import com.pos.PDPdb.persistence.repository.PatientRepository
 import com.pos.PDPdb.persistence.repository.PhysicianRepository
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -24,13 +26,32 @@ class PatientsController(
     private val _physicianRepository: PhysicianRepository,
     private val _patientModelAssembler: PatientModelAssembler,
     private val _appointmentRepository: AppointmentRepository,
-    private val _appointmentModelAssembler: AppointmentModelAssembler
+    private val _appointmentForPatientModelAssembler: AppointmentForPatientModelAssembler,
+    private val _pagedResourcesAssembler: PagedResourcesAssembler<PatientResponseDTO>
 ) {
 
     @GetMapping("/")
-    fun getAll(): ResponseEntity<Any> {
+    fun getAll(
+        @RequestParam(required = false, name ="page", defaultValue = "0") page: Int?,
+        @RequestParam(required = false, name = "size", defaultValue = "5") count: Int?
+    ): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(
-            _patientModelAssembler.toCollectionModel(_patientRepository.findAll().map { it.toDTO() })
+            _pagedResourcesAssembler.toModel(_patientRepository.findAll(PageRequest.of(page!!, count!!)).map { it.toDTO() }, _patientModelAssembler)
+                .add(
+                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatientsController::class.java).getByUserId(null))
+                    .withRel("filterByUserId")
+                )
+        )
+    }
+
+    //Returning a list with OK as the /patients/ should return a list, even if the filter is for an unique element
+    @GetMapping(value = ["/"], params = ["userId"])
+    fun getByUserId(
+        @RequestParam(required = true) userId: Int?,
+    ): ResponseEntity<Any>
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            _patientModelAssembler.toCollectionModel(_patientRepository.findByUserID(userId!!).map { it.toDTO() })
         )
     }
 
@@ -82,21 +103,21 @@ class PatientsController(
 
     @GetMapping("/{id}/physicians")
     fun getPatientAppointments(
-        @PathVariable id: String,
+        @PathVariable id: String?,
         @RequestParam(required = false) type: String?,
         @RequestParam(required = false) date: String?
     ): ResponseEntity<Any> {
 
         val appointments: Iterable<Appointment>
         if (date == null) {
-            appointments = _appointmentRepository.findByIdPatientID(id)
+            appointments = _appointmentRepository.findByIdPatientID(id!!)
         } else when (type) {
             "day" -> {
                 val calendar = Calendar.getInstance()
                 calendar.set(Calendar.DATE, date.toInt())
                 val sqlDate = calendar.time
 
-                appointments = _appointmentRepository.findByPatientIDAndDate(id, sqlDate)
+                appointments = _appointmentRepository.findByPatientIDAndDate(id!!, sqlDate)
             }
 
             "month" -> {
@@ -104,14 +125,14 @@ class PatientsController(
                 calendar.set(Calendar.MONTH, date.toInt() - 1)
                 val sqlDate = calendar.time
 
-                appointments = _appointmentRepository.findByIdPatientWithinAMonth(id, sqlDate)
+                appointments = _appointmentRepository.findByIdPatientWithinAMonth(id!!, sqlDate)
             }
 
             null -> {
                 try {
                     val sqlDate = SimpleDateFormat("dd-MM-yyyy").parse(date)
 
-                    appointments = _appointmentRepository.findByPatientIDAndDate(id, sqlDate)
+                    appointments = _appointmentRepository.findByPatientIDAndDate(id!!, sqlDate)
                 } catch (e: IllegalArgumentException) {
                     throw ResponseStatusException(HttpStatus.BAD_REQUEST)
                 }
@@ -121,7 +142,7 @@ class PatientsController(
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(
-            _appointmentModelAssembler.toCollectionModel(appointments.map { it.toDTO() }).add(
+            _appointmentForPatientModelAssembler.toCollectionModel(appointments.map { it.toPatientDTO() }).add(
                 WebMvcLinkBuilder.linkTo(
                     WebMvcLinkBuilder.methodOn(PatientsController::class.java)
                         .getPatientAppointments(id, type, date)
@@ -130,11 +151,28 @@ class PatientsController(
         )
     }
 
-    @PutMapping("/{patientId}/physicians/{physicianId}")
+    @GetMapping("/{patientId}/physicians/{physicianId}/date/{date}")
+    fun getAppointment(
+        @PathVariable physicianId: Int?, @PathVariable patientId: String?, @PathVariable date: String?
+    ): ResponseEntity<Any> {
+        return try {
+            ResponseEntity.status(HttpStatus.OK).body(
+                _appointmentForPatientModelAssembler.toModel(
+                    _appointmentRepository.findByIdPatientIDAndIdPhysicianIDAndIdDate(
+                        patientId!!, physicianId!!, SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
+                    ).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toPatientDTO()
+                )
+            )
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+        }
+    }
+
+    @PutMapping("/{patientId}/physicians/{physicianId}/date/{date}")
     fun createAppointment(
         @PathVariable physicianId: Int,
         @PathVariable patientId: String,
-        @RequestParam(required = true) date: String
+        @PathVariable date: String
     ): ResponseEntity<Any> {
         try {
             val sqlDate = SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
@@ -152,7 +190,7 @@ class PatientsController(
                     )
                     newAppointment = _appointmentRepository.save(newAppointment)
                     ResponseEntity.status(HttpStatus.CREATED).body(
-                        _appointmentModelAssembler.toModel(newAppointment.toDTO())
+                        _appointmentForPatientModelAssembler.toModel(newAppointment.toPatientDTO())
                     )
                 }
 
@@ -166,9 +204,9 @@ class PatientsController(
     }
 
 
-    @DeleteMapping("/{patientId}/physicians/{physicianId}")
+    @DeleteMapping("/{patientId}/physicians/{physicianId}/date/{date}")
     fun deleteAppointment(
-        @PathVariable physicianId: Int, @PathVariable patientId: String, @RequestParam(required = true) date: String
+        @PathVariable physicianId: Int, @PathVariable patientId: String, @PathVariable date: String
     ): ResponseEntity<Any> {
         val sqlDate = SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
         val apID = AppointmentsKey(patientId, physicianId, sqlDate)

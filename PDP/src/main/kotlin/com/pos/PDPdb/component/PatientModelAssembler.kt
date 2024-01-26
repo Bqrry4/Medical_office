@@ -16,14 +16,14 @@ class PatientModelAssembler : RepresentationModelAssembler<PatientResponseDTO, E
         return EntityModel.of(
             patient,
             linkTo(methodOn(PatientsController::class.java).getPatient(patient.cnp)).withSelfRel(),
-            linkTo(methodOn(PatientsController::class.java).getAll()).withRel("parent")
+            linkTo(methodOn(PatientsController::class.java).getAll(null, null)).withRel("parent")
         )
     }
 
     override fun toCollectionModel(patients: Iterable<PatientResponseDTO>): CollectionModel<EntityModel<PatientResponseDTO>> {
 
         val models = super.toCollectionModel(patients)
-        models.add(linkTo(methodOn(PatientsController::class.java).getAll()).withSelfRel())
+        models.add(linkTo(methodOn(PatientsController::class.java).getAll(null, null)).withSelfRel())
         return models
     }
 

@@ -36,6 +36,7 @@ class MedicalOfficeController(
         }
 
 //        _restTemplate.getForEntity()
+        return ResponseEntity.ok().build()
     }
 
 }

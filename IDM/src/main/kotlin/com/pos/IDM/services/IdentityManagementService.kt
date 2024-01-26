@@ -11,6 +11,7 @@ import com.pos.grpc.auth.IdentityManagementServiceGrpcKt
 import io.grpc.Metadata
 import io.grpc.Status
 import io.grpc.protobuf.ProtoUtils
+import io.jsonwebtoken.ExpiredJwtException
 import net.devh.boot.grpc.server.service.GrpcService
 import org.springframework.scheduling.annotation.Scheduled
 import java.util.*
@@ -80,11 +81,25 @@ class IdentityManagementService(
 
         //Parsing token, throw exception when malformed or expired
         val claims = runCatching { _jwtService.parseToken(request.token) }.getOrElse {
+
             val metadata = Metadata()
-            metadata.put(
-                ProtoUtils.keyForProto(Auth.ErrorResponse.getDefaultInstance()),
-                Auth.ErrorResponse.newBuilder().setErrorMessage("Token invalid").build()
-            )
+            when(it)
+            {
+                is ExpiredJwtException -> {
+                    metadata.put(
+                        ProtoUtils.keyForProto(Auth.ErrorResponse.getDefaultInstance()),
+                        Auth.ErrorResponse.newBuilder().setErrorMessage("Token expired").build()
+                    )
+                }
+                else ->
+                {
+                    metadata.put(
+                        ProtoUtils.keyForProto(Auth.ErrorResponse.getDefaultInstance()),
+                        Auth.ErrorResponse.newBuilder().setErrorMessage("Token invalid").build()
+                    )
+                }
+            }
+
             throw Status.INVALID_ARGUMENT.asException(metadata)
         }
 

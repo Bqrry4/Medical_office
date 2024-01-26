@@ -1,13 +1,15 @@
 package com.pos.PDPdb.controller
 
-import com.pos.PDPdb.component.AppointmentModelAssembler
+import com.pos.PDPdb.component.AppointmentForPatientModelAssembler
+import com.pos.PDPdb.component.AppointmentForPhysicianModelAssembler
 import com.pos.PDPdb.component.PhysicianModelAssembler
 import com.pos.PDPdb.dto.*
 import com.pos.PDPdb.persistence.model.Appointment
-import com.pos.PDPdb.persistence.model.AppointmentsKey
+import com.pos.PDPdb.persistence.model.Physician
 import com.pos.PDPdb.persistence.repository.AppointmentRepository
 import com.pos.PDPdb.persistence.repository.PatientRepository
 import com.pos.PDPdb.persistence.repository.PhysicianRepository
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder
@@ -25,43 +27,80 @@ class PhysiciansController(
     private val _physicianModelAssembler: PhysicianModelAssembler,
     private val _pagedResourcesAssembler: PagedResourcesAssembler<PhysicianResponseDTO>,
     private val _appointmentRepository: AppointmentRepository,
-    private val _appointmentModelAssembler: AppointmentModelAssembler,
+    private val _appointmentModelAssembler: AppointmentForPhysicianModelAssembler,
     private val _patientRepository: PatientRepository,
 ) {
-    @GetMapping("/")
-    fun getAll(): ResponseEntity<Any> {
-        val physicians = _physicianRepository.findAll()
-        return ResponseEntity.status(HttpStatus.OK).body(
-            _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
-                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getAll())
-                    .withSelfRel()
+//    @GetMapping("/")
+//    fun getAll(): ResponseEntity<Any> {
+//        val physicians = _physicianRepository.findAll()
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//            _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
+//                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getAll())
+//                    .withSelfRel()
+//
+//            ).add(
+//                WebMvcLinkBuilder.linkTo(
+//                    WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansBySpecialization(null)
+//                )
+//                    .withRel("filterBySpecialization")
+//            ).add(
+//                WebMvcLinkBuilder.linkTo(
+//                    WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansByName(null)
+//                )
+//                    .withRel("filterByName")
+//            )
+//        )
+//    }
 
-            ).add(
-                WebMvcLinkBuilder.linkTo(
-                    WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansBySpecialization(null)
+    @GetMapping("/")
+    fun getAll(
+        @RequestParam(required = false) page: Int?,
+        @RequestParam(required = false, name = "size", defaultValue = "5") count: Int?,
+        @RequestParam(required = true) name: String?,
+        @RequestParam(required = true) specialization: String?
+
+    ): ResponseEntity<Any> {
+        val physicians: Page<Physician>
+        val pageRequest = PageRequest.of(page!!, count!!)
+        when
+        {
+            //if no one is selected
+            name == null && specialization == null -> {
+                physicians = _physicianRepository.findAll(pageRequest)
+            }
+            //if name is not selected
+            name == null -> {
+                physicians = _physicianRepository.findBySpecializationStartingWith(specialization!!, pageRequest)
+            }
+            //if specialization is not selected
+            specialization == null -> {
+                physicians = _physicianRepository.findByLastNameStartingWith(name, pageRequest)
+            }
+            //both are selected
+            else -> {
+                physicians = _physicianRepository.findByLastNameStartingWithAndSpecializationStartingWith(name,
+                    specialization, pageRequest)
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+            _pagedResourcesAssembler.toModel(physicians.map { it.toDTO() }, _physicianModelAssembler)
+                .add(
+                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getByUserId(null))
+                        .withRel("filterByUserId")
                 )
-                    .withRel("filterBySpecialization")
-            ).add(
-                WebMvcLinkBuilder.linkTo(
-                    WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansByName(null)
-                )
-                    .withRel("filterByName")
-            )
         )
     }
 
-    @GetMapping(value = ["/"], params = ["page", "size"])
-    fun getPaged(
-        @RequestParam(required = true) page: Int,
-        @RequestParam(required = false, name = "size", defaultValue = "5") count: Int
-    ): ResponseEntity<Any> {
-        val physicians = _physicianRepository.findAll(PageRequest.of(page, count))
-        return when {
-            physicians.isEmpty -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-            else -> ResponseEntity.status(HttpStatus.OK).body(
-                _pagedResourcesAssembler.toModel(physicians.map { it.toDTO() }, _physicianModelAssembler)
-            )
-        }
+    //Returning a list with OK as the /physicians/ should return a list, even if the filter is for an unique element
+    @GetMapping(value = ["/"], params = ["userId"])
+    fun getByUserId(
+        @RequestParam(required = true) userId: Int?,
+    ): ResponseEntity<Any>
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            _physicianModelAssembler.toCollectionModel(_physicianRepository.findByUserID(userId!!).map { it.toDTO() })
+        )
     }
 
     @GetMapping("/{id}")
@@ -77,41 +116,41 @@ class PhysiciansController(
             )
     }
 
-    @GetMapping(value = ["/"], params = ["specialization"])
-    fun getPhysiciansBySpecialization(
-        @RequestParam(required = true) specialization: String?,
-    ): ResponseEntity<Any> {
-        val physicians = _physicianRepository.findBySpecializationStartingWith(specialization!!)
-        return when {
-            physicians.none() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-            else -> ResponseEntity.status(HttpStatus.OK).body(
-                _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
-                    WebMvcLinkBuilder.linkTo(
-                        WebMvcLinkBuilder.methodOn(PhysiciansController::class.java)
-                            .getPhysiciansBySpecialization(specialization)
-                    ).withSelfRel()
-                )
+//    @GetMapping(value = ["/"], params = ["specialization"])
+//    fun getPhysiciansBySpecialization(
+//        @RequestParam(required = true) specialization: String?,
+//    ): ResponseEntity<Any> {
+//        val physicians = _physicianRepository.findBySpecializationStartingWith(specialization!!)
+//        return when {
+//            physicians.none() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+//            else -> ResponseEntity.status(HttpStatus.OK).body(
+//                _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
+//                    WebMvcLinkBuilder.linkTo(
+//                        WebMvcLinkBuilder.methodOn(PhysiciansController::class.java)
+//                            .getPhysiciansBySpecialization(specialization)
+//                    ).withSelfRel()
+//                )
+//
+//            )
+//        }
+//    }
 
-            )
-        }
-    }
-
-    @GetMapping(value = ["/"], params = ["name"])
-    fun getPhysiciansByName(
-        @RequestParam(required = true) name: String?,
-    ): ResponseEntity<Any> {
-        val physicians = _physicianRepository.findByLastNameStartingWith(name!!)
-        return when {
-            physicians.none() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-            else -> ResponseEntity.status(HttpStatus.OK).body(
-                _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
-                    WebMvcLinkBuilder.linkTo(
-                        WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansByName(name)
-                    ).withSelfRel()
-                )
-            )
-        }
-    }
+//    @GetMapping(value = ["/"], params = ["name"])
+//    fun getPhysiciansByName(
+//        @RequestParam(required = true) name: String?,
+//    ): ResponseEntity<Any> {
+//        val physicians = _physicianRepository.findByLastNameStartingWith(name!!)
+//        return when {
+//            physicians.none() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+//            else -> ResponseEntity.status(HttpStatus.OK).body(
+//                _physicianModelAssembler.toCollectionModel(physicians.map { it.toDTO() }).add(
+//                    WebMvcLinkBuilder.linkTo(
+//                        WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysiciansByName(name)
+//                    ).withSelfRel()
+//                )
+//            )
+//        }
+//    }
 
     @PostMapping("/")
     fun createPhysician(
@@ -158,21 +197,21 @@ class PhysiciansController(
 
     @GetMapping("/{id}/patients")
     fun getPhysicianAppointments(
-        @PathVariable id: Int,
+        @PathVariable id: Int?,
         @RequestParam(required = false) type: String?,
         @RequestParam(required = false) date: String?
     ): ResponseEntity<Any> {
 
         val appointments: Iterable<Appointment>
         if (date == null) {
-            appointments = _appointmentRepository.findByIdPhysicianID(id)
+            appointments = _appointmentRepository.findByIdPhysicianID(id!!)
         } else when (type) {
             "day" -> {
                 val calendar = Calendar.getInstance()
                 calendar.set(Calendar.DATE, date.toInt())
                 val sqlDate = calendar.time
 
-                appointments = _appointmentRepository.findByPhysicianIDAndDate(id, sqlDate)
+                appointments = _appointmentRepository.findByPhysicianIDAndDate(id!!, sqlDate)
             }
 
             "month" -> {
@@ -180,14 +219,14 @@ class PhysiciansController(
                 calendar.set(Calendar.MONTH, date.toInt() - 1)
                 val sqlDate = calendar.time
 
-                appointments = _appointmentRepository.findByIdPhysicianWithinAMonth(id, sqlDate)
+                appointments = _appointmentRepository.findByIdPhysicianWithinAMonth(id!!, sqlDate)
             }
 
             null -> {
                 try {
                     val sqlDate = SimpleDateFormat("dd-MM-yyyy").parse(date)
 
-                    appointments = _appointmentRepository.findByPhysicianIDAndDate(id, sqlDate)
+                    appointments = _appointmentRepository.findByPhysicianIDAndDate(id!!, sqlDate)
                 } catch (e: IllegalArgumentException) {
                     throw ResponseStatusException(HttpStatus.BAD_REQUEST)
                 }
@@ -198,7 +237,7 @@ class PhysiciansController(
 
         return when {
             !appointments.none() -> ResponseEntity.status(HttpStatus.OK).body(
-                _appointmentModelAssembler.toCollectionModel(appointments.map { it.toDTO() }).add(
+                _appointmentModelAssembler.toCollectionModel(appointments.map { it.toPhysicianDTO() }).add(
                     WebMvcLinkBuilder.linkTo(
                         WebMvcLinkBuilder.methodOn(PhysiciansController::class.java)
                             .getPhysicianAppointments(id, type, date)
@@ -210,16 +249,16 @@ class PhysiciansController(
         }
     }
 
-    @GetMapping("/{physicianId}/patients/{patientId}")
+    @GetMapping("/{physicianId}/patients/{patientId}/date/{date}")
     fun getAppointment(
-        @PathVariable physicianId: Int, @PathVariable patientId: String, @RequestParam(required = true) date: String
+        @PathVariable physicianId: Int?, @PathVariable patientId: String?, @PathVariable date: String?
     ): ResponseEntity<Any> {
         return try {
             ResponseEntity.status(HttpStatus.OK).body(
                 _appointmentModelAssembler.toModel(
                     _appointmentRepository.findByIdPatientIDAndIdPhysicianIDAndIdDate(
-                        patientId, physicianId, SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
-                    ).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toDTO()
+                        patientId!!, physicianId!!, SimpleDateFormat("dd-MM-yyyy-HH:mm").parse(date)
+                    ).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toPhysicianDTO()
                 )
             )
         } catch (e: IllegalArgumentException) {
@@ -227,11 +266,11 @@ class PhysiciansController(
         }
     }
 
-    @PutMapping("/{physicianId}/patients/{patientId}")
+    @PutMapping("/{physicianId}/patients/{patientId}/date/{date}")
     fun updateAppointment(
         @PathVariable physicianId: Int,
         @PathVariable patientId: String,
-        @RequestParam(required = true) date: String,
+        @PathVariable date: String,
         @RequestBody appointmentDto: AppointmentUpdateDTO
     ): ResponseEntity<Any> {
         try {
@@ -247,7 +286,7 @@ class PhysiciansController(
                     appointment.status = appointmentDto.status
                     val updatedAppointment = _appointmentRepository.save(appointment)
                     ResponseEntity.status(HttpStatus.OK).body(
-                        _appointmentModelAssembler.toModel(updatedAppointment.toDTO())
+                        _appointmentModelAssembler.toModel(updatedAppointment.toPhysicianDTO())
                     )
                 }
             }

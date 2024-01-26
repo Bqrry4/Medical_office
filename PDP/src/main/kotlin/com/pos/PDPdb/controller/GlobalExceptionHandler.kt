@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.sql.SQLException
 import java.sql.SQLIntegrityConstraintViolationException
 import java.sql.SQLTransientConnectionException
-
+import java.text.ParseException
 
 @ControllerAdvice
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
@@ -20,7 +20,15 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleSqlTriggerErr(ex: SQLException, request: WebRequest) : ResponseEntity<Any> {
         return handleExceptionInternal(
             ex, ex.message,
-            HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request
+            HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request
+        )!!
+    }
+
+    @ExceptionHandler(ParseException::class)
+    fun handleGenericParseErr(ex: SQLException, request: WebRequest) : ResponseEntity<Any> {
+        return handleExceptionInternal(
+            ex, ex.message,
+            HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request
         )!!
     }
 

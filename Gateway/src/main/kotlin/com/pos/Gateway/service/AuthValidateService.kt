@@ -6,7 +6,9 @@ import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.protobuf.ProtoUtils
 import net.devh.boot.grpc.client.inject.GrpcClient
+import org.springframework.stereotype.Service
 
+@Service
 class AuthValidateService(
     @GrpcClient("idm-pos")
     private val _authStub : IdentityManagementServiceGrpc.IdentityManagementServiceBlockingStub,
