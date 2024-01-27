@@ -25,13 +25,14 @@ class InvestigationController(
 //        _consultationRepository.updateConsultInvestigations(1, "1", Utils.parseDatetime("23-12-2023-12:00"), Investigation(ObjectId().toHexString(), "23", 23, "Bro"))
 //    }
 
-    @GetMapping("/physicians/{physicianID}/patients/{patientID}/date/{date}/consult/investigations")
+    @GetMapping(value = ["/physicians/{physicianID}/patients/{patientID}/date/{date}/consult/investigations",
+        "/patients/{patientID}/physicians/{physicianID}/date/{date}/consult/investigations"])
     fun getConsultInvestigations(
-        @PathVariable(required = true) patientID: String,
-        @PathVariable(required = true) physicianID: Int,
-        @PathVariable(required = true) date: String
+        @PathVariable(required = true) patientID: String?,
+        @PathVariable(required = true) physicianID: Int?,
+        @PathVariable(required = true) date: String?
     ): ResponseEntity<Any> {
-        val consult = _consultationService.getConsult(physicianID, patientID, Utils.parseDatetime(date))
+        val consult = _consultationService.getConsult(physicianID!!, patientID!!, Utils.parseDatetime(date!!))
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
         val investigations = consult.investigations
@@ -66,15 +67,16 @@ class InvestigationController(
         )
     }
 
-    @GetMapping("/physicians/{physicianID}/patients/{patientID}/date/{date}/consult/investigations/{investigationID}")
+    @GetMapping(value = ["/physicians/{physicianID}/patients/{patientID}/date/{date}/consult/investigations/{investigationID}",
+        "/patients/{patientID}/physicians/{physicianID}/date/{date}/consult/investigations/{investigationID}"])
     fun getOneInvestigation(
-        @PathVariable(required = true) patientID: String,
-        @PathVariable(required = true) physicianID: Int,
-        @PathVariable(required = true) date: String,
-        @PathVariable(required = true) investigationID: String
+        @PathVariable(required = true) patientID: String?,
+        @PathVariable(required = true) physicianID: Int?,
+        @PathVariable(required = true) date: String?,
+        @PathVariable(required = true) investigationID: String?
     ): ResponseEntity<Any> {
         val investigation = _consultationService.getConsultInvestigation(
-            physicianID, patientID, Utils.parseDatetime(date), investigationID
+            physicianID!!, patientID!!, Utils.parseDatetime(date!!), investigationID!!
         ) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
         return ResponseEntity.status(HttpStatus.OK).body(

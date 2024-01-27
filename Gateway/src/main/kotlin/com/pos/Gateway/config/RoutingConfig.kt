@@ -1,4 +1,11 @@
 package com.pos.Gateway.config
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.databind.node.TextNode
+import com.pos.Gateway.dto.pdp.PatientResponseDTO
+import com.pos.Gateway.dto.pdp.PhysicianResponseDTO
 import com.pos.grpc.auth.Auth
 import com.pos.grpc.auth.IdentityManagementServiceGrpc
 import io.grpc.Status
@@ -14,13 +21,20 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.http.converter.HttpMessageConverter
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
+import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.servlet.function.*
 import org.springframework.web.servlet.function.RouterFunctions.route
+import org.springframework.web.util.ContentCachingResponseWrapper
+import java.lang.reflect.Type
 import java.net.URI
-import com.pos.Gateway.dto.pdp.PatientResponseDTO
-import org.springframework.web.server.ResponseStatusException
+import java.nio.charset.Charset
+import java.util.logging.Logger
 
 
 @Configuration
@@ -35,16 +49,21 @@ class RoutingConfig(
 
     //    val pdpServiceLocation = "http://pdp-service:8080"
     val consultServiceLocation: URI = URI.create("http://localhost:8083")
+
+    private val logger = Logger.getLogger("routingLogger")
+
     @Bean
     fun routeConfig(): RouterFunction<ServerResponse> {
         return route()
             //consult routes
             .add(
-                route(
-                    RequestPredicates.path("/api/medical_office/physicians/*/patients/*/date/*/consult"),
+                route(RequestPredicates.path("/api/medical_office/self/patients/*/date/*/consult")
+                    .or(RequestPredicates.path("/api/medical_office/self/physicians/*/date/*/consult"))
+                    .or(RequestPredicates.path("/api/medical_office/self/patients/*/date/*/consult/investigations"))
+                    .or(RequestPredicates.path("/api/medical_office/self/physicians/*/date/*/consult/investigations"))
+                    .or(RequestPredicates.path("/api/medical_office/self/patients/*/date/*/consult/investigations/*"))
+                    .or(RequestPredicates.path("/api/medical_office/self/physicians/*/date/*/consult/investigations/*")),
                     http(consultServiceLocation))
-                    .andRoute(RequestPredicates.path("/api/medical_office/physicians/*/patients/*/date/*/consult/**"),
-                        http(consultServiceLocation))
                     .filter(validateAccess())
             )
             //pdp routes
@@ -70,8 +89,7 @@ class RoutingConfig(
     private fun validateAccess(): (ServerRequest, HandlerFunction<ServerResponse>) -> ServerResponse {
         return fun (request: ServerRequest, next: HandlerFunction<ServerResponse> ): ServerResponse {
 
-            //TODO: For debugging purpose, delete after
-            println(request.uri())
+            logger.info("Routing " + request.uri())
 
             //No access without the token
             val token = kotlin.runCatching {
@@ -98,6 +116,7 @@ class RoutingConfig(
                 }
             }
 
+            logger.info("Identity assumed " + identity.role)
             //Checking the route access for role
             when(identity.role)
             {
@@ -109,61 +128,9 @@ class RoutingConfig(
                     }
                 }
                 "patient" -> {
-
-                    //routes for patients are the pdp routes without the /patients/{id}, which is implied by the token
-                    //patient has access on all routes under /patients/ path, except /patients/
-                    //also has access on /physicians/
-                    if(!request.path().matches(
-                            //match child routes
-                            Regex("(/api/medical_office/self(/.*)*)" +
-                                    //match /physicians/ route
-                                "|(/api/medical_office/physicians/\$)")))
-                    {
-                        return ServerResponse.status(HttpStatus.FORBIDDEN).build()
-                    }
-
-                    //we must remake the path to the service
-                    if(request.path().startsWith("/api/medical_office/self"))
-                    {
-                        //getting the implied /patients/{id} part
-                        val headers = HttpHeaders()
-                        headers.add("X-Forwarded-Host", "localhost:8080")
-                        headers.add("X-Forwarded-Port", "8080")
-                        headers.add("X-Forwarded-Proto", "http")
-
-                        val responseType =
-                            object : ParameterizedTypeReference<CollectionModel<PatientResponseDTO?>?>() {
-                            }
-
-                        val response =
-                            kotlin.runCatching {
-                                _restTemplate.exchange("$pdpServiceLocation/api/medical_office/patients/?userId=" + identity.userId, HttpMethod.GET, HttpEntity(null, headers), responseType);
-                            }.getOrElse {
-                                return if(it is HttpClientErrorException.NotFound)
-                                    ServerResponse.status(HttpStatus.NOT_FOUND).build()
-                                else
-                                    throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
-                            }
-
-                        //if the path is only self return the response as it is
-                        if(request.path() == "/api/medical_office/self")
-                            return ServerResponse.status(response.statusCode).body(response.body!!)
-
-                        //either way construct the next route
-                        val patientID =
-                            kotlin.runCatching {
-                                response.body!!.content.elementAt(0)!!.cnp
-                            }.getOrElse {
-                                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
-                            }
-
-                        //pass to services
-                        return next.handle(
-                            ServerRequest.from(request)
-                                .uri(URI(request.uri().parseServerAuthority().toASCIIString()
-                                    .replace("/self", "/patients/$patientID")))
-                                .build())
-                    }
+                    val response =  resolvePatientRole(identity, request, next)
+                    if(response != null)
+                        return response
                 }
                 "physician" -> {
                     //routes for physicians are the pdp routes without the /physicians/{id}, which is implied by the token
@@ -172,7 +139,6 @@ class RoutingConfig(
                     {
                         return ServerResponse.status(HttpStatus.FORBIDDEN).build()
                     }
-
                 }
             }
 
@@ -181,6 +147,230 @@ class RoutingConfig(
             return next.handle(request)
         }
     }
+
+    private fun resolvePatientRole(identity: Auth.IdentityResponse, request: ServerRequest, next: HandlerFunction<ServerResponse>):
+            ServerResponse? {
+        //routes for patients are the pdp routes without the /patients/{id}, which is implied by the token
+        //patient has access on all routes under /patients/ path, except /patients/
+        //also has access on /physicians/
+        if(!request.path().matches(
+                //match child routes
+                Regex("(/api/medical_office/self(/.*)*)" +
+                        //match /physicians/ route
+                        "|(/api/medical_office/physicians/\$)")))
+        {
+            return ServerResponse.status(HttpStatus.FORBIDDEN).build()
+        }
+
+        //we must remake the path to the service
+        if(request.path().startsWith("/api/medical_office/self"))
+        {
+            //getting the implied /patients/{id} part
+            val headers = HttpHeaders()
+            headers.add("X-Forwarded-Host", "localhost:8080")
+            headers.add("X-Forwarded-Port", "8080")
+            headers.add("X-Forwarded-Proto", "http")
+
+            val responseType =
+                object : ParameterizedTypeReference<CollectionModel<PatientResponseDTO?>?>() {
+                }
+
+            val response =
+                kotlin.runCatching {
+                    _restTemplate.exchange("$pdpServiceLocation/api/medical_office/patients/?userId=" + identity.userId, HttpMethod.GET, HttpEntity(null, headers), responseType);
+                }.getOrElse {
+                    return if(it is HttpClientErrorException.NotFound)
+                        ServerResponse.status(HttpStatus.NOT_FOUND).build()
+                    else
+                        throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
+                }
+
+
+            //either way construct the next route
+            val patientID =
+                kotlin.runCatching {
+                    response.body!!.content.elementAt(0)!!.cnp
+                }.getOrElse {
+                    throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
+                }
+
+            //pass to services
+            var forwardedResponse = next.handle(
+                ServerRequest.from(request)
+                    .uri(URI(request.uri().parseServerAuthority().toASCIIString()
+                        .replace("/self", "/patients/$patientID")))
+                    .build())
+
+            //we need to do some changes
+            if(forwardedResponse.statusCode().is2xxSuccessful)
+            {
+                val forwardedResponseContent = ContentCachingResponseWrapper((RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?)!!.response!!)
+                forwardedResponse.writeTo(request.servletRequest(), forwardedResponseContent) {
+                    mutableListOf(
+                        MappingJackson2HttpMessageConverter()
+                    ) as List<HttpMessageConverter<*>>
+                }
+
+                val objectMapper = ObjectMapper()
+                val modified = objectMapper.readValue(forwardedResponseContent.contentAsByteArray, JsonNode::class.java)
+
+                //if the path is only self we must remove the parent link
+                if(request.path() == "/api/medical_office/self")
+                {
+                    (modified["_links"] as ObjectNode).remove("parent")
+                }
+
+                modified["_links"].properties().forEach {
+                    val node = it.value as ObjectNode
+                    var textValue = node.get("href").textValue()
+                    textValue = textValue.replace(Regex("/api/medical_office/patients/\\d"), "/api/medical_office/self")
+                    node.remove("href")
+                    node.put("href", textValue)
+                }
+
+                //if the patient have an active consult
+                if(request.path().matches(Regex("/api/medical_office/self/physicians/\\d+/date/(.)+")))
+                {
+                    val consultPath = consultServiceLocation.toASCIIString() + request.path() + "/consult"
+                    kotlin.runCatching {
+                        //we do have interest only in status
+                    _restTemplate.headForHeaders(consultPath)
+                    }.onSuccess {
+                        //add the link to hal
+                        (modified["_links"] as ObjectNode).putObject("consult").put("href", consultPath)
+                    }
+                }
+
+                //if the patient is on the consult, show him the parent
+                if(request.path().matches(Regex("/api/medical_office/self/physicians/\\d+/date/(.)+/consult")))
+                {
+                    (modified["_links"] as ObjectNode).putObject("parent").put("href", pdpServiceLocation.toASCIIString() + request.path().split("/consult")[0])
+                }
+
+                forwardedResponse = ServerResponse.status(response.statusCode).body(modified)
+            }
+
+            return forwardedResponse
+        }
+
+        //request was not processed
+        return null;
+    }
+
+    private fun resolvePhysicianRole(identity: Auth.IdentityResponse, request: ServerRequest, next: HandlerFunction<ServerResponse>):
+            ServerResponse?
+    {
+        //routes for physicians are the pdp routes without the /physicians/{id}, which is implied by the token
+        //patient has access on all routes under /physicians/ path, except /physicians/
+        if(!request.path().matches(
+                //match child routes
+                Regex("(/api/medical_office/self(/.*)*)")))
+        {
+            return ServerResponse.status(HttpStatus.FORBIDDEN).build()
+        }
+
+        //we must remake the path to the service
+        if(request.path().startsWith("/api/medical_office/self"))
+        {
+            //getting the implied /patients/{id} part
+            val headers = HttpHeaders()
+            headers.add("X-Forwarded-Host", "localhost:8080")
+            headers.add("X-Forwarded-Port", "8080")
+            headers.add("X-Forwarded-Proto", "http")
+
+            val responseType =
+                object : ParameterizedTypeReference<CollectionModel<PhysicianResponseDTO?>?>() {
+                }
+
+            val response =
+                kotlin.runCatching {
+                    _restTemplate.exchange("$pdpServiceLocation/api/medical_office/physicians/?userId=" + identity.userId, HttpMethod.GET, HttpEntity(null, headers), responseType);
+                }.getOrElse {
+                    return if(it is HttpClientErrorException.NotFound)
+                        ServerResponse.status(HttpStatus.NOT_FOUND).build()
+                    else
+                        throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
+                }
+
+
+            //either way construct the next route
+            val physicianID =
+                kotlin.runCatching {
+                    response.body!!.content.elementAt(0)!!.physicianId
+                }.getOrElse {
+                    throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
+                }
+
+
+            //check if the physician want to create a consult without an appointment
+            if(request.path().matches(Regex("/api/medical_office/self/patients/\\d+/date/(.)+/consult"))
+                && request.method() == HttpMethod.PUT)
+            {
+                kotlin.runCatching {
+                    //we do have interest only in status
+                    _restTemplate.headForHeaders(pdpServiceLocation.toASCIIString() + request.path().split("/consult")[0].replace("/self", "/physicians/$physicianID"))
+                }.onFailure {
+                    return ServerResponse.status(HttpStatus.NOT_FOUND).build()
+                }
+            }
+
+            //pass to services
+            var forwardedResponse = next.handle(
+                ServerRequest.from(request)
+                    .uri(URI(request.uri().parseServerAuthority().toASCIIString()
+                        .replace("/self", "/physicians/$physicianID")))
+                    .build())
+
+            //we need to do some changes
+            if(forwardedResponse.statusCode().is2xxSuccessful) {
+
+                val forwardedResponseContent =
+                    ContentCachingResponseWrapper((RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?)!!.response!!)
+                forwardedResponse.writeTo(request.servletRequest(), forwardedResponseContent) {
+                    mutableListOf(
+                        MappingJackson2HttpMessageConverter()
+                    ) as List<HttpMessageConverter<*>>
+                }
+
+                val objectMapper = ObjectMapper()
+                val modified = objectMapper.readValue(forwardedResponseContent.contentAsByteArray, JsonNode::class.java)
+
+                //if the path is only self we must remove the parent link
+                if (request.path() == "/api/medical_office/self") {
+                    (modified["_links"] as ObjectNode).remove("parent")
+                }
+
+                modified["_links"].properties().forEach {
+                    val node = it.value as ObjectNode
+                    var textValue = node.get("href").textValue()
+                    textValue =
+                        textValue.replace(Regex("/api/medical_office/physicians/\\d"), "/api/medical_office/self")
+                    node.remove("href")
+                    node.put("href", textValue)
+                }
+
+                //notify on appointment route the physician, that it's possible to create a consult
+                if(request.path().matches(Regex("/api/medical_office/self/patients/\\d+/date/(.)+")))
+                {
+                    //showing the route to create consult
+                    (modified["_links"] as ObjectNode).putObject("consult").put("href", consultServiceLocation.toASCIIString() + request.path() + "/consult")
+
+                }
+
+                //if the physician is on the consult, show him the parent
+                if(request.path().matches(Regex("/api/medical_office/self/patients/\\d+/date/(.)+/consult")))
+                {
+                    (modified["_links"] as ObjectNode).putObject("parent").put("href", pdpServiceLocation.toASCIIString() + request.path().split("/consult")[0])
+                }
+
+                forwardedResponse = ServerResponse.status(response.statusCode).body(modified)
+            }
+            return forwardedResponse
+        }
+
+
+        //request was not processed
+        return null;
+    }
+
 }
-
-

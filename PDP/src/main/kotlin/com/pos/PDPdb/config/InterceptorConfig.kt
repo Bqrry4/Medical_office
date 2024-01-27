@@ -1,6 +1,5 @@
-package com.pos.Gateway.config
+package com.pos.PDPdb.config
 
-import com.pos.Gateway.config.interceptors.LoggerInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer

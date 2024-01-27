@@ -22,24 +22,8 @@ class ConsultsController(
     private val _consultModelAssembler: ConsultModelAssembler
 ) {
 
-    @GetMapping("/")
-    fun test() {
-
-        val list = mutableListOf<Investigation>()
-        list.add(Investigation(id = ObjectId().toHexString(), description = "cc", duration = 3, result = "c"))
-        list.add(Investigation(id = ObjectId().toHexString(), description = "cc", duration = 3, result = "cc"))
-        val a = Consultation(
-            patientId = "1",
-            physicianId = 1,
-            diagnostic = null,
-            date = Utils.parseDatetime("23-12-2023-12:00"),
-            investigations = list
-        )
-//        _consultationService.insert(a)
-
-    }
-
-    @GetMapping("/physicians/{physicianID}/patients/{patientID}/date/{date}/consult")
+    @GetMapping(value = ["/physicians/{physicianID}/patients/{patientID}/date/{date}/consult",
+    "/patients/{patientID}/physicians/{physicianID}/date/{date}/consult"])
     fun getOneConsultation(
         @PathVariable(required = true) physicianID: Int,
         @PathVariable(required = true) patientID: String,
