@@ -8,4 +8,8 @@ Create Table Users(
 );
 
 
-Insert into Users (username, password, role) VALUES ('admin', 'imagod', 'admin');
+Insert into Users (username, password, role) 
+VALUES 
+	('admin', 'imagod', 'admin'),
+	('patientDef', 'password', 'patient'),
+	('physicianDef', 'password', 'physician');

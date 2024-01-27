@@ -13,6 +13,9 @@ Create Table Patients(
 	Constraint CHK_Email check (email like '%@%.%')
 );
 
+Insert into Patients (cnp, id_user, last_name, first_name, email, phone, birth_date) VALUES ('0123456789101', 2, 'default', 'default', 'default@def.def', '07777', '1999-01-01');
+
+
 Create Table Physicians(
 	id_physician int primary key AUTO_INCREMENT,
 	id_user int unique, #So called foreign key,
@@ -20,10 +23,14 @@ Create Table Physicians(
 	first_name varchar(50),
 	email varchar(70) unique,
 	phone char(10),
-	specialization char(10),
+	specialization char(50),
 	Constraint CHK_Phone check (phone like '07%'),
 	Constraint CHK_Email check (email like '%@%.%')
 );
+
+
+Insert into Physicians (id_user, last_name, first_name, email, phone, specialization) VALUES (3, 'defaultP', 'defaultP', 'default_p@def.def', '077771', 'default_specialization');
+
 
 Create Table Appointments(
 	id_patient varchar(13),
@@ -34,6 +41,9 @@ Create Table Appointments(
 	Constraint fk_id_physician foreign key (id_physician) references Physicians(id_physician) ON DELETE CASCADE,
 	Primary key (id_patient, id_physician, ap_date)
 );
+
+
+
 
 
 delimiter //

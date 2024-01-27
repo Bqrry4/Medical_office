@@ -5,22 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2ee903f-0358-44ee-8d90-eeeb7a565faa" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/dto/pdp/PatientResponseDto.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/component/AppointmentForPhysicianModelAssembler.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/config/RoutingConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/config/RoutingConfig.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/controller/MedicalOfficeController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/controller/MedicalOfficeController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/service/AuthValidateService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../Gateway/src/main/kotlin/com/pos/Gateway/service/AuthValidateService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/com/pos/IDM/services/IdentityManagementService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/com/pos/IDM/services/IdentityManagementService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/component/AppointmentModelAssembler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/component/AppointmentForPatientModelAssembler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/component/PatientModelAssembler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/component/PatientModelAssembler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/component/PhysicianModelAssembler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/component/PhysicianModelAssembler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/GlobalExceptionHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/GlobalExceptionHandler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/PatientsController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/PatientsController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/PhysiciansController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/controller/PhysiciansController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/dto/AppointmentDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/dto/AppointmentDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/persistence/repository/Repositories.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/kotlin/com/pos/PDPdb/persistence/repository/Repositories.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PDP/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../PDP/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../config/idm.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../config/idm.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../config/pdp.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../config/pdp.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -15,6 +15,7 @@ import io.jsonwebtoken.ExpiredJwtException
 import net.devh.boot.grpc.server.service.GrpcService
 import org.springframework.scheduling.annotation.Scheduled
 import java.util.*
+import java.util.logging.Logger
 
 
 @GrpcService
@@ -24,9 +25,10 @@ class IdentityManagementService(
     private val _invalidTokensRepository: InvalidTokensRepository
 ) : IdentityManagementServiceGrpcKt.IdentityManagementServiceCoroutineImplBase() {
 
+    private val logger = Logger.getLogger("logger")
     override suspend fun auth(request: Auth.UserAuthDetails): Auth.Token {
 
-        //TODO: check for username and password validity
+        logger.info("Method: auth, with details:" + request.username + " | " + request.password)
 
         val user = _userRepository.findByUsernameAndPassword(request.username, request.password)
             .orElseThrow {
@@ -35,6 +37,7 @@ class IdentityManagementService(
                     ProtoUtils.keyForProto(Auth.ErrorResponse.getDefaultInstance()),
                     Auth.ErrorResponse.newBuilder().setErrorMessage("Not found").build()
                 )
+                logger.info("Not found")
                 Status.NOT_FOUND.asException(metadata)
             }
 
@@ -51,7 +54,7 @@ class IdentityManagementService(
 
     override suspend fun register(request: Auth.UserRegisterDetails): Auth.UserId{
 
-        //TODO: check for username and password validity
+        logger.info("Method: register, with details:" + request.username + " | " + request.password)
 
         var newUser = User(
             username = request.username,
@@ -60,9 +63,11 @@ class IdentityManagementService(
             id = 0
         )
 
+        //the only constraint is the unique username, so it fails only when duplicate
         kotlin.runCatching {
             newUser = _userRepository.save(newUser)
         }.onFailure {
+            logger.info("Failed: Already exists")
             throw Status.ALREADY_EXISTS.asException()
         }
 
@@ -72,12 +77,20 @@ class IdentityManagementService(
     }
 
     override suspend fun deleteUser(request: Auth.UserId): Empty {
+
+        logger.info("Method: deleteUser, with details:" + request.userId)
+
+
         //Delete, i don't think i need to return a status exception there
+        //as it is idempotent
         _userRepository.deleteById(request.userId)
         return Empty.newBuilder().build()
     }
 
     override suspend fun validate(request: Auth.Token): Auth.IdentityResponse {
+
+        logger.info("Method: validate, with details:" + request.token)
+
 
         //Parsing token, throw exception when malformed or expired
         val claims = runCatching { _jwtService.parseToken(request.token) }.getOrElse {
@@ -90,6 +103,7 @@ class IdentityManagementService(
                         ProtoUtils.keyForProto(Auth.ErrorResponse.getDefaultInstance()),
                         Auth.ErrorResponse.newBuilder().setErrorMessage("Token expired").build()
                     )
+                    logger.info("Token expired")
                 }
                 else ->
                 {
@@ -97,6 +111,7 @@ class IdentityManagementService(
                         ProtoUtils.keyForProto(Auth.ErrorResponse.getDefaultInstance()),
                         Auth.ErrorResponse.newBuilder().setErrorMessage("Token invalid").build()
                     )
+                    logger.info("Token malformed")
                 }
             }
 
@@ -111,6 +126,7 @@ class IdentityManagementService(
                     ProtoUtils.keyForProto(Auth.ErrorResponse.getDefaultInstance()),
                     Auth.ErrorResponse.newBuilder().setErrorMessage("Token invalidated").build()
                 )
+                logger.info("Token is in blacklist")
                 throw Status.INVALID_ARGUMENT.asException(metadata)
             }
         }
@@ -124,6 +140,9 @@ class IdentityManagementService(
     }
 
     override suspend fun invalidate(request: Auth.Token): Empty {
+
+        logger.info("Method: invalidate, with details:" + request.token)
+
         //In case of exception it will abort the save, meaning the token is already invalid
         runCatching {
             val claims = _jwtService.parseToken(request.token)
@@ -144,6 +163,9 @@ class IdentityManagementService(
     //clear tokens once 1 hr
     @Scheduled(fixedDelay = 60 * 60 * 1000)
     fun clearExpiredInvalidTokens() {
+
+        logger.info("Clearing the expired tokens from redis...")
+
         _invalidTokensRepository.findAll().forEach { entry ->
             entry.tokens.forEach { token ->
                 //try to parse

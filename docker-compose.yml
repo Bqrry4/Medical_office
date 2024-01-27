@@ -58,6 +58,7 @@ services:
     build:
       context: ./PDP/
       dockerfile: Dockerfile
+    container_name: pdp-service
     ports:
       - "8081:8080"
     expose:
@@ -73,6 +74,7 @@ services:
     build:
       context: ./IDM/
       dockerfile: Dockerfile
+    container_name: idm-service
     ports:
       - "9090:9090"
     expose:
@@ -89,6 +91,7 @@ services:
     build:
       context: ./Consult/
       dockerfile: Dockerfile
+    container_name: consult-service
     ports:
       - "8083:8080"
     expose:
@@ -104,6 +107,7 @@ services:
     build:
       context: ./Gateway/
       dockerfile: Dockerfile
+    container_name: gateway-service
     ports:
       - "8080:8080"
     expose:

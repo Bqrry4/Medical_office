@@ -29,8 +29,8 @@ class AuthController(
     private val _authValidateService: AuthValidateService
 ) {
 
-//    val pdpServiceLocation = "http://pdp-service:8080"
-    val pdpServiceLocation = "http://localhost:8081"
+    val pdpServiceLocation = "http://pdp-service:8080"
+//    val pdpServiceLocation = "http://localhost:8081"
 
     @PostMapping("/login")
     fun login(
@@ -52,7 +52,7 @@ class AuthController(
                         ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                             ClientResponseErrorMessageDto("Invalid credentials"))
                     else
-                        ResponseEntity.badRequest().build()
+                        ResponseEntity.internalServerError().build()
 
                 }
                 else -> ResponseEntity.internalServerError().build()
@@ -62,10 +62,20 @@ class AuthController(
         return ResponseEntity.ok(token)
     }
     @PutMapping("/logout")
-    fun logout(@RequestHeader(HttpHeaders.AUTHORIZATION) bearerToken: String,)
+    fun logout(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) bearerToken: String
+    ): ResponseEntity<Any>
     {
-        val token = bearerToken.split(" ")[1];
+        val token =
+
+            kotlin.runCatching {
+                bearerToken.split("Bearer ")[1];
+            } .getOrElse {
+                return ResponseEntity.badRequest().build()
+            }
         _authStub.invalidate(Auth.Token.newBuilder().setToken(token).build());
+
+        return ResponseEntity.ok().build()
     }
 
     @PostMapping("/register")
@@ -182,7 +192,7 @@ class AuthController(
                             ResponseEntity.status(HttpStatus.CONFLICT).body(
                                 ClientResponseErrorMessageDto("Username taken"))
                         else
-                            ResponseEntity.badRequest().build()
+                            ResponseEntity.internalServerError().build()
                     }
 
                     else -> ResponseEntity.internalServerError().build()

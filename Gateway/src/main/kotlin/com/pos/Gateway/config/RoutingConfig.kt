@@ -44,11 +44,11 @@ class RoutingConfig(
     private val _restTemplate: RestTemplate
 ){
 
-    //    val pdpServiceLocation = "http://pdp-service:8080"
-    val pdpServiceLocation: URI = URI.create("http://localhost:8081")
+        val pdpServiceLocation: URI = URI.create("http://pdp-service:8080")
+//    val pdpServiceLocation: URI = URI.create("http://localhost:8081")
 
-    //    val pdpServiceLocation = "http://pdp-service:8080"
-    val consultServiceLocation: URI = URI.create("http://localhost:8083")
+        val consultServiceLocation: URI = URI.create("http://consult-service:8080")
+//    val consultServiceLocation: URI = URI.create("http://localhost:8083")
 
     private val logger = Logger.getLogger("routingLogger")
 
@@ -223,7 +223,7 @@ class RoutingConfig(
                 modified["_links"].properties().forEach {
                     val node = it.value as ObjectNode
                     var textValue = node.get("href").textValue()
-                    textValue = textValue.replace(Regex("/api/medical_office/patients/\\d"), "/api/medical_office/self")
+                    textValue = textValue.replace(Regex("/api/medical_office/patients/\\d+"), "/api/medical_office/self")
                     node.remove("href")
                     node.put("href", textValue)
                 }
@@ -310,7 +310,7 @@ class RoutingConfig(
                     //we do have interest only in status
                     _restTemplate.headForHeaders(pdpServiceLocation.toASCIIString() + request.path().split("/consult")[0].replace("/self", "/physicians/$physicianID"))
                 }.onFailure {
-                    return ServerResponse.status(HttpStatus.NOT_FOUND).build()
+                    return ServerResponse.status(HttpStatus.BAD_REQUEST).build()
                 }
             }
 

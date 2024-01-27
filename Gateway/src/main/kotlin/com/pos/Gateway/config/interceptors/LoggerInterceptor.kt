@@ -11,7 +11,7 @@ class LoggerInterceptor : HandlerInterceptor {
     private val logger = Logger.getLogger("methodLogger")
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
 
-        logger.info("IN: { Host:" + request.getHeaders("Host").nextElement() + ", Method: " + request.method + ", Path: " + request.requestURI + " }");
+        logger.info("IN: { Host:" + request.getHeaders("Host").nextElement() + ", Method: " + request.method + ", Path: " + request.requestURI + ", Query:" + request.queryString +" }");
 
         return super.preHandle(request, response, handler)
     }
