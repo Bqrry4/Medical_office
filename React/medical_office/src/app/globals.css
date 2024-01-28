@@ -104,50 +104,6 @@ main {
     }
 }
 
-nav a:hover, aside a:hover{
-    background-color: #545a69;
-    color: rgb(125, 166, 214);
-    cursor: pointer;
-    padding: 7px;
-    padding-right: 20px;
-
-    animation-name: menu_hover;
-    animation-duration: 0.3s;
-}
-
-aside {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 10px;
-    bottom: 5%;
-    left: 10px;
-    width: 200px;
-
-}
-
-aside a {
-    text-decoration: none;
-    font-size: 20px;
-    font-family: 'Balsamiq Sans';
-    display: block;
-
-    border-left: solid;
-    border-radius: 5px;
-    border-color: rgba(229, 191, 212);
-    border-right-width: 2px;
-    padding: 5px;
-}
-
-
-section {
-    width: 80%;
-    display: flexbox;
-
-}
-
 
 table {
     border: 1px;
@@ -166,18 +122,32 @@ td {
     border-right: solid;
 }
 
+:read-only {
+    background-color: #002b36;
+  } 
+
 button, .btn {
     border-radius: 3px;
-    background: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
     color: white;
     border: 0px;
     padding: 5px;
 }
 
+input {
+    border-radius: 3px;
+    text-align: center;
+}
+
+#logout {
+    margin:20px ;
+    float:right;
+    top:-20px;
+}
 
 
 button:hover, .btn:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 dt {
