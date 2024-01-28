@@ -29,7 +29,12 @@ Create Table Physicians(
 );
 
 
-Insert into Physicians (id_user, last_name, first_name, email, phone, specialization) VALUES (3, 'defaultP', 'defaultP', 'default_p@def.def', '077771', 'default_specialization');
+Insert into Physicians (id_user, last_name, first_name, email, phone, specialization) VALUES (3, 'defaultP', 'defaultP', 'default_p@def.def', '077771', 'default_specialization'),
+(4, 'defaultP', 'defaultP', 'default_p2@def.def', '077772', 'default_specialization2'),
+(5, 'defaultP', 'defaultP', 'default_p3@def.def', '077773', 'default_specialization'),
+(6, 'defaultP', 'defaultP', 'default_p4@def.def', '077774', 'default_specialization2'),
+(7, 'defaultP', 'defaultP', 'default_p5@def.def', '077775', 'default_specialization'),
+(8, 'defaultP', 'defaultP', 'default_p6@def.def', '077776', 'default_specialization');
 
 
 Create Table Appointments(

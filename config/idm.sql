@@ -12,4 +12,10 @@ Insert into Users (username, password, role)
 VALUES 
 	('admin', 'imagod', 'admin'),
 	('patientDef', 'password', 'patient'),
-	('physicianDef', 'password', 'physician');
+	('physicianDef', 'password', 'physician'),
+	('physicianDef2', 'password', 'physician'),
+	('physicianDef3', 'password', 'physician'),
+	('physicianDef4', 'password', 'physician'),
+	('physicianDef5', 'password', 'physician'),
+	('physicianDef6', 'password', 'physician');
+	

@@ -55,7 +55,6 @@ body {
 
 
 .centered {
-  height: 100vh; /* Magic here */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -122,8 +121,10 @@ td {
     border-right: solid;
 }
 
-:read-only {
+input[readonly] {
     background-color: #002b36;
+    color: white;
+    text-emphasis-color: white;
   } 
 
 button, .btn {

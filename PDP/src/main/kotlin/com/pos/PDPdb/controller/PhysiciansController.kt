@@ -54,7 +54,7 @@ class PhysiciansController(
 
     @GetMapping("/")
     fun getAll(
-        @RequestParam(required = false) page: Int?,
+        @RequestParam(required = false, name ="page", defaultValue = "0") page: Int?,
         @RequestParam(required = false, name = "size", defaultValue = "5") count: Int?,
         @RequestParam(required = true) name: String?,
         @RequestParam(required = true) specialization: String?

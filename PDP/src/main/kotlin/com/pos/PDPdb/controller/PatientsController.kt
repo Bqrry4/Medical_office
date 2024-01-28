@@ -62,6 +62,9 @@ class PatientsController(
         return ResponseEntity.status(HttpStatus.OK).body(
             _patientModelAssembler.toModel(
                 _patientRepository.findById(id).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toDTO()
+            ).add(
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getAll(null, null, null, null))
+                    .withRel("listPhysicians")
             )
         )
     }
