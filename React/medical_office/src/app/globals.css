@@ -31,3 +31,157 @@ body {
     text-wrap: balance;
   }
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@700&display=swap');
+
+:root {
+    --background_main_color: #002b36;
+    --nav_triggered_color: #d44040;
+    --nav_default_color: rgba(229, 191, 212);
+}
+
+/* html{
+    filter: contrast(110%);
+} */
+
+body {
+    height: 100%;
+    background-image: linear-gradient(var(--background_main_color), black);
+    text-decoration-color: white;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: rgb(174, 175, 175);
+}
+
+
+.centered {
+  height: 100vh; /* Magic here */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* form fieldset, .fieldset {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    /* gap: 2px;
+    border-radius: 25px;
+    margin: 15px;
+    border: solid;
+} */ */
+
+.background {
+    z-index: -1;
+}
+
+.foreground {
+    z-index: 1;
+}
+
+main {
+    position: relative;
+    top: 150px;
+    width: 80%;
+    margin-left: 10%;
+    aspect-ratio: 4 / 3;
+}
+
+
+@keyframes menu_hover {
+    from {
+        background-color: var(--background_main_color);
+        padding: 5px;
+    }
+
+    to {
+        background-color: #545a69;
+        padding: 7px;
+        padding-right: 20px;
+    }
+}
+
+nav a:hover, aside a:hover{
+    background-color: #545a69;
+    color: rgb(125, 166, 214);
+    cursor: pointer;
+    padding: 7px;
+    padding-right: 20px;
+
+    animation-name: menu_hover;
+    animation-duration: 0.3s;
+}
+
+aside {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    bottom: 5%;
+    left: 10px;
+    width: 200px;
+
+}
+
+aside a {
+    text-decoration: none;
+    font-size: 20px;
+    font-family: 'Balsamiq Sans';
+    display: block;
+
+    border-left: solid;
+    border-radius: 5px;
+    border-color: rgba(229, 191, 212);
+    border-right-width: 2px;
+    padding: 5px;
+}
+
+
+section {
+    width: 80%;
+    display: flexbox;
+
+}
+
+
+table {
+    border: 1px;
+    border-radius: 5px;
+    border-color: white;
+    border-top: solid;
+    border-left: solid;
+}
+
+th,
+td {
+    border: 1px;
+    border-radius: 5px;
+    border-color: white;
+    border-bottom: solid;
+    border-right: solid;
+}
+
+button, .btn {
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 0px;
+    padding: 5px;
+}
+
+
+
+button:hover, .btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+dt {
+    font-size: 24px;
+    font-style:oblique;
+    padding: 5px;
+}

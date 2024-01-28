@@ -133,12 +133,9 @@ class RoutingConfig(
                         return response
                 }
                 "physician" -> {
-                    //routes for physicians are the pdp routes without the /physicians/{id}, which is implied by the token
-                    //patient has access on all routes under /physicians/ path, except /physicians/
-                    if(!request.path().matches(Regex("/api/medical_office/physicians/[\\w/]+")))
-                    {
-                        return ServerResponse.status(HttpStatus.FORBIDDEN).build()
-                    }
+                    val response =  resolvePhysicianRole(identity, request, next)
+                    if(response != null)
+                        return response
                 }
             }
 
