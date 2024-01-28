@@ -30,17 +30,17 @@ interface AppointmentRepository : JpaRepository<Appointment, AppointmentsKey> {
     fun findByIdPatientID(id: String): Iterable<Appointment>
     fun findByIdPhysicianID(id: Int): Iterable<Appointment>
 
-    @Query(value = "select * from Appointments a where a.id_patient = ?1 and date(a.data) = date(?2)",
+    @Query(value = "select * from Appointments a where a.id_patient = ?1 and date(a.ap_date) = date(?2)",
         nativeQuery = true)
     fun findByPatientIDAndDate(id: String, date: Date): Iterable<Appointment>
-    @Query(value = "select * from Appointments a where a.id_physician = ?1 and date(a.data) = date(?2)",
+    @Query(value = "select * from Appointments a where a.id_physician = ?1 and date(a.ap_date) = date(?2)",
         nativeQuery = true)
     fun findByPhysicianIDAndDate(id: Int, date: Date): Iterable<Appointment>
 
-    @Query(value = "select * from Appointments a where a.id_patient = ?1 and month(a.data) = month(?2)",
+    @Query(value = "select * from Appointments a where a.id_patient = ?1 and month(a.ap_date) = month(?2)",
         nativeQuery = true)
     fun findByIdPatientWithinAMonth(id: String, date: Date): Iterable<Appointment>
-    @Query(value = "select * from Appointments a where a.id_physician = ?1 and month(a.data) = month(?2)",
+    @Query(value = "select * from Appointments a where a.id_physician = ?1 and month(a.ap_date) = month(?2)",
         nativeQuery = true)
     fun findByIdPhysicianWithinAMonth(id: Int, date: Date): Iterable<Appointment>
 

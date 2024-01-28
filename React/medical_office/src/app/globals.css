@@ -60,6 +60,7 @@ body {
   align-items: center;
   flex-direction: column;
   gap: 4px;
+  margin-top: 40px
 }
 
 /* form fieldset, .fieldset {

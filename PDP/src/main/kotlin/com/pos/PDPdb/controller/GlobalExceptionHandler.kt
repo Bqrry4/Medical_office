@@ -6,14 +6,17 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.WebRequest
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.sql.SQLException
 import java.sql.SQLIntegrityConstraintViolationException
 import java.sql.SQLTransientConnectionException
 import java.text.ParseException
 
-@ControllerAdvice
+@RestControllerAdvice
+@EnableWebMvc
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(SQLTransientConnectionException::class)

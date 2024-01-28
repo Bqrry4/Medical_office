@@ -47,6 +47,8 @@ Create Table Appointments(
 	Primary key (id_patient, id_physician, ap_date)
 );
 
+Insert into Appointments (id_patient, id_physician, ap_date, status) VALUES 
+('0123456789101', 1, '2024-06-18T10:34:09', 'neprezentat');
 
 
 

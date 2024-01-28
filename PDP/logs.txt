@@ -7,17 +7,17 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.1.5)
 
-2024-01-27T22:55:22.525Z  INFO 1 --- [           main] com.pos.PDPdb.PdPdbApplicationKt         : Starting PdPdbApplicationKt v0.0.1-SNAPSHOT using Java 17.0.2 with PID 1 (/usr/src/app/source.jar started by root in /usr/src/app)
-2024-01-27T22:55:22.528Z  INFO 1 --- [           main] com.pos.PDPdb.PdPdbApplicationKt         : No active profile set, falling back to 1 default profile: "default"
-2024-01-27T22:55:24.771Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-01-27T22:55:24.898Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 115 ms. Found 3 JPA repository interfaces.
-2024-01-27T22:55:25.942Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2024-01-27T22:55:25.961Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2024-01-27T22:55:25.961Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.15]
-2024-01-27T22:55:26.223Z  INFO 1 --- [           main] o.a.c.c.C.[.[.[/api/medical_office]      : Initializing Spring embedded WebApplicationContext
-2024-01-27T22:55:26.225Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3537 ms
-2024-01-27T22:55:26.490Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2024-01-27T22:55:27.649Z ERROR 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Exception during pool initialization.
+2024-01-28T21:27:00.620Z  INFO 1 --- [           main] com.pos.PDPdb.PdPdbApplicationKt         : Starting PdPdbApplicationKt v0.0.1-SNAPSHOT using Java 17.0.2 with PID 1 (/usr/src/app/source.jar started by root in /usr/src/app)
+2024-01-28T21:27:00.624Z  INFO 1 --- [           main] com.pos.PDPdb.PdPdbApplicationKt         : No active profile set, falling back to 1 default profile: "default"
+2024-01-28T21:27:02.808Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-01-28T21:27:02.899Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 74 ms. Found 3 JPA repository interfaces.
+2024-01-28T21:27:04.189Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-01-28T21:27:04.208Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-01-28T21:27:04.208Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.15]
+2024-01-28T21:27:04.491Z  INFO 1 --- [           main] o.a.c.c.C.[.[.[/api/medical_office]      : Initializing Spring embedded WebApplicationContext
+2024-01-28T21:27:04.505Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3692 ms
+2024-01-28T21:27:04.739Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-01-28T21:27:05.872Z ERROR 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Exception during pool initialization.
 
 java.sql.SQLNonTransientConnectionException: Socket fail to connect to host:address=(host=mariadb-pdp)(port=3306)(type=primary). Connection refused
 	at org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:137) ~[mariadb-java-client-3.1.4.jar!/:na]
@@ -88,192 +88,105 @@ Caused by: java.net.ConnectException: Connection refused
 	at org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:131) ~[mariadb-java-client-3.1.4.jar!/:na]
 	... 57 common frames omitted
 
-2024-01-27T22:55:27.697Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-01-27T22:55:27.775Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.13.Final
-2024-01-27T22:55:27.779Z  INFO 1 --- [           main] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
-2024-01-27T22:55:28.175Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-01-27T22:55:28.210Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2024-01-27T22:55:29.216Z ERROR 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Exception during pool initialization.
-
-java.sql.SQLNonTransientConnectionException: Socket fail to connect to host:address=(host=mariadb-pdp)(port=3306)(type=primary). Connection refused
-	at org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:137) ~[mariadb-java-client-3.1.4.jar!/:na]
-	at org.mariadb.jdbc.client.impl.StandardClient.<init>(StandardClient.java:99) ~[mariadb-java-client-3.1.4.jar!/:na]
-	at org.mariadb.jdbc.Driver.connect(Driver.java:70) ~[mariadb-java-client-3.1.4.jar!/:na]
-	at org.mariadb.jdbc.Driver.connect(Driver.java:101) ~[mariadb-java-client-3.1.4.jar!/:na]
-	at org.mariadb.jdbc.Driver.connect(Driver.java:27) ~[mariadb-java-client-3.1.4.jar!/:na]
-	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-5.0.1.jar!/:na]
-	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359) ~[HikariCP-5.0.1.jar!/:na]
-	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201) ~[HikariCP-5.0.1.jar!/:na]
-	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470) ~[HikariCP-5.0.1.jar!/:na]
-	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-5.0.1.jar!/:na]
-	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100) ~[HikariCP-5.0.1.jar!/:na]
-	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-5.0.1.jar!/:na]
-	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:437) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:61) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:279) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:193) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:69) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:119) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:264) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:239) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:216) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.model.relational.Database.<init>(Database.java:45) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:231) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:199) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:169) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:376) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:352) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1817) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1766) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:598) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:520) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1166) ~[spring-context-6.0.13.jar!/:6.0.13]
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:940) ~[spring-context-6.0.13.jar!/:6.0.13]
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:616) ~[spring-context-6.0.13.jar!/:6.0.13]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:738) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:440) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at com.pos.PDPdb.PdPdbApplicationKt.main(PdPdbApplication.kt:13) ~[classes!/:0.0.1-SNAPSHOT]
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
-	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49) ~[source.jar:0.0.1-SNAPSHOT]
-	at org.springframework.boot.loader.Launcher.launch(Launcher.java:95) ~[source.jar:0.0.1-SNAPSHOT]
-	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58) ~[source.jar:0.0.1-SNAPSHOT]
-	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:65) ~[source.jar:0.0.1-SNAPSHOT]
-Caused by: java.net.ConnectException: Connection refused
-	at java.base/sun.nio.ch.Net.pollConnect(Native Method) ~[na:na]
-	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672) ~[na:na]
-	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542) ~[na:na]
-	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:597) ~[na:na]
-	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[na:na]
-	at java.base/java.net.Socket.connect(Socket.java:633) ~[na:na]
-	at org.mariadb.jdbc.client.impl.ConnectionHelper.connectSocket(ConnectionHelper.java:131) ~[mariadb-java-client-3.1.4.jar!/:na]
-	... 58 common frames omitted
-
-2024-01-27T22:55:29.219Z  WARN 1 --- [           main] o.h.e.j.e.i.JdbcEnvironmentInitiator     : HHH000342: Could not obtain connection to query metadata
-
-java.lang.NullPointerException: Cannot invoke "org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(java.sql.SQLException, String)" because the return value of "org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.sqlExceptionHelper()" is null
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:116) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:279) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:193) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:69) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:119) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:264) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:239) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:216) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.model.relational.Database.<init>(Database.java:45) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:231) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:199) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:169) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:376) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:352) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1817) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1766) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:598) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:520) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1166) ~[spring-context-6.0.13.jar!/:6.0.13]
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:940) ~[spring-context-6.0.13.jar!/:6.0.13]
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:616) ~[spring-context-6.0.13.jar!/:6.0.13]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:738) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:440) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at com.pos.PDPdb.PdPdbApplicationKt.main(PdPdbApplication.kt:13) ~[classes!/:0.0.1-SNAPSHOT]
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
-	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49) ~[source.jar:0.0.1-SNAPSHOT]
-	at org.springframework.boot.loader.Launcher.launch(Launcher.java:95) ~[source.jar:0.0.1-SNAPSHOT]
-	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58) ~[source.jar:0.0.1-SNAPSHOT]
-	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:65) ~[source.jar:0.0.1-SNAPSHOT]
-
-2024-01-27T22:55:29.222Z ERROR 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Failed to initialize JPA EntityManagerFactory: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'javax.persistence.jdbc.url', 'hibernate.connection.url', or 'hibernate.dialect')
-2024-01-27T22:55:29.222Z  WARN 1 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'javax.persistence.jdbc.url', 'hibernate.connection.url', or 'hibernate.dialect')
-2024-01-27T22:55:29.225Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
-2024-01-27T22:55:29.240Z  INFO 1 --- [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2024-01-27T22:55:29.270Z ERROR 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
-
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'javax.persistence.jdbc.url', 'hibernate.connection.url', or 'hibernate.dialect')
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1770) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:598) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:520) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1166) ~[spring-context-6.0.13.jar!/:6.0.13]
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:940) ~[spring-context-6.0.13.jar!/:6.0.13]
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:616) ~[spring-context-6.0.13.jar!/:6.0.13]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:738) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:440) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295) ~[spring-boot-3.1.5.jar!/:3.1.5]
-	at com.pos.PDPdb.PdPdbApplicationKt.main(PdPdbApplication.kt:13) ~[classes!/:0.0.1-SNAPSHOT]
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
-	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49) ~[source.jar:0.0.1-SNAPSHOT]
-	at org.springframework.boot.loader.Launcher.launch(Launcher.java:95) ~[source.jar:0.0.1-SNAPSHOT]
-	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58) ~[source.jar:0.0.1-SNAPSHOT]
-	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:65) ~[source.jar:0.0.1-SNAPSHOT]
-Caused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'javax.persistence.jdbc.url', 'hibernate.connection.url', or 'hibernate.dialect')
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:277) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:239) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:216) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.model.relational.Database.<init>(Database.java:45) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:231) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:199) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:169) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:376) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:352) ~[spring-orm-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1817) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1766) ~[spring-beans-6.0.13.jar!/:6.0.13]
-	... 24 common frames omitted
-Caused by: org.hibernate.HibernateException: Unable to determine Dialect without JDBC metadata (please set 'javax.persistence.jdbc.url', 'hibernate.connection.url', or 'hibernate.dialect')
-	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:190) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:86) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentWithDefaults(JdbcEnvironmentInitiator.java:229) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:381) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:193) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:69) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:119) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:264) ~[hibernate-core-6.2.13.Final.jar!/:6.2.13.Final]
-	... 39 common frames omitted
-
+2024-01-28T21:27:05.899Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-01-28T21:27:05.940Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.13.Final
+2024-01-28T21:27:05.941Z  INFO 1 --- [           main] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2024-01-28T21:27:06.148Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-01-28T21:27:06.176Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-01-28T21:27:06.212Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@6f815e7f
+2024-01-28T21:27:06.215Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-01-28T21:27:06.594Z  WARN 1 --- [           main] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): com.pos.PDPdb.persistence.model.AppointmentsKey
+2024-01-28T21:27:06.595Z  WARN 1 --- [           main] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): com.pos.PDPdb.persistence.model.AppointmentsKey
+2024-01-28T21:27:07.087Z  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-01-28T21:27:07.089Z  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-01-28T21:27:07.704Z  INFO 1 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-01-28T21:27:07.841Z  WARN 1 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-01-28T21:27:08.356Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path '/api/medical_office'
+2024-01-28T21:27:08.369Z  INFO 1 --- [           main] com.pos.PDPdb.PdPdbApplicationKt         : Started PdPdbApplicationKt in 8.692 seconds (process running for 9.466)
+2024-01-28T21:27:24.944Z  INFO 1 --- [nio-8080-exec-1] o.a.c.c.C.[.[.[/api/medical_office]      : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-01-28T21:27:24.945Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-01-28T21:27:24.946Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-01-28T21:27:24.960Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:userId=3 }
+2024-01-28T21:27:25.303Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:27:25.367Z  INFO 1 --- [nio-8080-exec-2] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/1, Query:null }
+2024-01-28T21:27:25.386Z  INFO 1 --- [nio-8080-exec-2] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/1, Status: 200 }
+2024-01-28T21:27:29.733Z  INFO 1 --- [nio-8080-exec-3] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:userId=3 }
+2024-01-28T21:27:29.751Z  INFO 1 --- [nio-8080-exec-3] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:27:29.770Z  INFO 1 --- [nio-8080-exec-4] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/1/patients, Query:date=6&type=month }
+2024-01-28T21:27:30.096Z  INFO 1 --- [nio-8080-exec-4] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/1/patients, Status: 200 }
+2024-01-28T21:27:38.903Z  INFO 1 --- [nio-8080-exec-5] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:userId=3 }
+2024-01-28T21:27:38.922Z  INFO 1 --- [nio-8080-exec-5] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:27:38.940Z  INFO 1 --- [nio-8080-exec-6] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/1/patients, Query:date=18-06-2024 }
+2024-01-28T21:27:38.977Z  INFO 1 --- [nio-8080-exec-6] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/1/patients, Status: 200 }
+2024-01-28T21:28:29.082Z  INFO 1 --- [nio-8080-exec-7] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/patients/, Query:userId=2 }
+2024-01-28T21:28:29.099Z  INFO 1 --- [nio-8080-exec-7] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/patients/, Status: 200 }
+2024-01-28T21:28:29.114Z  INFO 1 --- [nio-8080-exec-8] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/patients/0123456789101, Query:null }
+2024-01-28T21:28:29.124Z  INFO 1 --- [nio-8080-exec-8] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/patients/0123456789101, Status: 200 }
+2024-01-28T21:28:29.173Z  INFO 1 --- [nio-8080-exec-9] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&specialization=&name=&size= }
+2024-01-28T21:28:29.243Z  INFO 1 --- [nio-8080-exec-9] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:35.643Z  INFO 1 --- [io-8080-exec-10] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/patients/, Query:userId=2 }
+2024-01-28T21:28:35.660Z  INFO 1 --- [io-8080-exec-10] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/patients/, Status: 200 }
+2024-01-28T21:28:35.673Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : IN: { Host:pdp-service:8080, Method: PUT, Path: /api/medical_office/patients/0123456789101, Query:null }
+2024-01-28T21:28:35.901Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : OUT: {Method: PUT, Path: /api/medical_office/patients/0123456789101, Status: 200 }
+2024-01-28T21:28:39.815Z  INFO 1 --- [nio-8080-exec-2] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/patients/, Query:userId=2 }
+2024-01-28T21:28:39.833Z  INFO 1 --- [nio-8080-exec-2] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/patients/, Status: 200 }
+2024-01-28T21:28:39.845Z  INFO 1 --- [nio-8080-exec-3] methodLogger                             : IN: { Host:pdp-service:8080, Method: PUT, Path: /api/medical_office/patients/0123456789101, Query:null }
+2024-01-28T21:28:39.859Z  WARN 1 --- [nio-8080-exec-3] o.m.jdbc.message.server.ErrorPacket      : Error: 4025-23000: CONSTRAINT `CHK_Email` failed for `pos`.`Patients`
+2024-01-28T21:28:39.861Z  WARN 1 --- [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 4025, SQLState: 23000
+2024-01-28T21:28:39.861Z ERROR 1 --- [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : (conn=3) CONSTRAINT `CHK_Email` failed for `pos`.`Patients`
+2024-01-28T21:28:46.589Z  INFO 1 --- [nio-8080-exec-4] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&specialization=&name=&size= }
+2024-01-28T21:28:46.643Z  INFO 1 --- [nio-8080-exec-4] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:48.212Z  INFO 1 --- [nio-8080-exec-5] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:specialization=&name=&page=1&size= }
+2024-01-28T21:28:48.229Z  INFO 1 --- [nio-8080-exec-5] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:52.225Z  INFO 1 --- [nio-8080-exec-6] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:name=&specialization=d&page=1&size= }
+2024-01-28T21:28:52.233Z  INFO 1 --- [nio-8080-exec-6] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:52.328Z  INFO 1 --- [nio-8080-exec-7] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:name=&specialization=de&page=1&size= }
+2024-01-28T21:28:52.333Z  INFO 1 --- [nio-8080-exec-7] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:52.451Z  INFO 1 --- [nio-8080-exec-8] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:name=&page=1&size=&specialization=def }
+2024-01-28T21:28:52.458Z  INFO 1 --- [nio-8080-exec-8] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:52.603Z  INFO 1 --- [nio-8080-exec-9] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:name=&page=1&size=&specialization=defa }
+2024-01-28T21:28:52.609Z  INFO 1 --- [nio-8080-exec-9] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:54.166Z  INFO 1 --- [io-8080-exec-10] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&size=&specialization=defa }
+2024-01-28T21:28:54.203Z  INFO 1 --- [io-8080-exec-10] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:55.809Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:specialization=defau&page=0&name=&size= }
+2024-01-28T21:28:55.853Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:56.033Z  INFO 1 --- [nio-8080-exec-2] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&specialization=defaul&size= }
+2024-01-28T21:28:56.074Z  INFO 1 --- [nio-8080-exec-2] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:56.103Z  INFO 1 --- [nio-8080-exec-3] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&specialization=default&size= }
+2024-01-28T21:28:56.134Z  INFO 1 --- [nio-8080-exec-3] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:57.257Z  INFO 1 --- [nio-8080-exec-4] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:specialization=default_&page=0&name=&size= }
+2024-01-28T21:28:57.295Z  INFO 1 --- [nio-8080-exec-4] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:57.426Z  INFO 1 --- [nio-8080-exec-5] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&specialization=default_s&size= }
+2024-01-28T21:28:57.468Z  INFO 1 --- [nio-8080-exec-5] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:57.558Z  INFO 1 --- [nio-8080-exec-6] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:specialization=default_sp&page=0&name=&size= }
+2024-01-28T21:28:57.591Z  INFO 1 --- [nio-8080-exec-6] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:57.722Z  INFO 1 --- [nio-8080-exec-7] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&specialization=default_spe&size= }
+2024-01-28T21:28:57.753Z  INFO 1 --- [nio-8080-exec-7] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:57.834Z  INFO 1 --- [nio-8080-exec-8] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&size=&specialization=default_spec }
+2024-01-28T21:28:57.874Z  INFO 1 --- [nio-8080-exec-8] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:58.255Z  INFO 1 --- [nio-8080-exec-9] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:specialization=default_speci&page=0&name=&size= }
+2024-01-28T21:28:58.291Z  INFO 1 --- [nio-8080-exec-9] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:58.364Z  INFO 1 --- [io-8080-exec-10] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&size=&specialization=default_specia }
+2024-01-28T21:28:58.398Z  INFO 1 --- [io-8080-exec-10] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:58.531Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&specialization=default_special&name=&size= }
+2024-01-28T21:28:58.561Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:58.752Z  INFO 1 --- [nio-8080-exec-2] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:specialization=default_speciali&page=0&name=&size= }
+2024-01-28T21:28:58.785Z  INFO 1 --- [nio-8080-exec-2] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:59.415Z  INFO 1 --- [nio-8080-exec-3] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&size=&specialization=default_specializ }
+2024-01-28T21:28:59.460Z  INFO 1 --- [nio-8080-exec-3] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:59.489Z  INFO 1 --- [nio-8080-exec-4] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&specialization=default_specializa&name=&size= }
+2024-01-28T21:28:59.531Z  INFO 1 --- [nio-8080-exec-4] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:59.811Z  INFO 1 --- [nio-8080-exec-5] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&specialization=default_specializat&size= }
+2024-01-28T21:28:59.843Z  INFO 1 --- [nio-8080-exec-5] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:28:59.934Z  INFO 1 --- [nio-8080-exec-6] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&specialization=default_specializati&size= }
+2024-01-28T21:28:59.963Z  INFO 1 --- [nio-8080-exec-6] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:29:00.072Z  INFO 1 --- [nio-8080-exec-7] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&specialization=default_specializatio&size= }
+2024-01-28T21:29:00.111Z  INFO 1 --- [nio-8080-exec-7] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:29:00.266Z  INFO 1 --- [nio-8080-exec-8] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&name=&size=&specialization=default_specialization }
+2024-01-28T21:29:00.305Z  INFO 1 --- [nio-8080-exec-8] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:29:00.324Z  INFO 1 --- [nio-8080-exec-9] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/physicians/, Query:page=0&specialization=default_specialization2&name=&size= }
+2024-01-28T21:29:00.341Z  INFO 1 --- [nio-8080-exec-9] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/physicians/, Status: 200 }
+2024-01-28T21:29:25.844Z  INFO 1 --- [io-8080-exec-10] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/patients/, Query:userId=2 }
+2024-01-28T21:29:25.857Z  INFO 1 --- [io-8080-exec-10] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/patients/, Status: 200 }
+2024-01-28T21:29:25.868Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : IN: { Host:pdp-service:8080, Method: GET, Path: /api/medical_office/patients/0123456789101/physicians, Query:date=6&type=month }
+2024-01-28T21:29:25.906Z  INFO 1 --- [nio-8080-exec-1] methodLogger                             : OUT: {Method: GET, Path: /api/medical_office/patients/0123456789101/physicians, Status: 200 }

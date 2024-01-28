@@ -220,7 +220,7 @@ class RoutingConfig(
                 modified["_links"].properties().forEach {
                     val node = it.value as ObjectNode
                     var textValue = node.get("href").textValue()
-                    textValue = textValue.replace(Regex("/api/medical_office/patients/\\d+"), "/api/medical_office/self")
+                    textValue = textValue.replace(Regex("/api/medical_office/patients/[{}\\w]+"), "/api/medical_office/self")
                     node.remove("href")
                     node.put("href", textValue)
                 }
@@ -341,7 +341,7 @@ class RoutingConfig(
                     val node = it.value as ObjectNode
                     var textValue = node.get("href").textValue()
                     textValue =
-                        textValue.replace(Regex("/api/medical_office/physicians/\\d"), "/api/medical_office/self")
+                        textValue.replace(Regex("/api/medical_office/physicians/[{}\\w]+"), "/api/medical_office/self")
                     node.remove("href")
                     node.put("href", textValue)
                 }

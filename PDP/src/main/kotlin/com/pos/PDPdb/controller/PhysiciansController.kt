@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -112,7 +113,11 @@ class PhysiciansController(
                 _physicianModelAssembler.toModel(
                     _physicianRepository.findById(id)
                         .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toDTO()
+                ).add(
+                    WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getPhysicianAppointments(null, null, null))
+                        .withRel("appointments")
                 )
+
             )
     }
 
@@ -227,26 +232,35 @@ class PhysiciansController(
                     val sqlDate = SimpleDateFormat("dd-MM-yyyy").parse(date)
 
                     appointments = _appointmentRepository.findByPhysicianIDAndDate(id!!, sqlDate)
-                } catch (e: IllegalArgumentException) {
-                    throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+                } catch (e: ParseException) {
+                    throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY)
                 }
             }
 
-            else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+            else -> throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY)
         }
 
-        return when {
-            !appointments.none() -> ResponseEntity.status(HttpStatus.OK).body(
-                _appointmentModelAssembler.toCollectionModel(appointments.map { it.toPhysicianDTO() }).add(
-                    WebMvcLinkBuilder.linkTo(
-                        WebMvcLinkBuilder.methodOn(PhysiciansController::class.java)
-                            .getPhysicianAppointments(id, type, date)
-                    ).withSelfRel()
-                )
+        return ResponseEntity.status(HttpStatus.OK).body(
+            _appointmentModelAssembler.toCollectionModel(appointments.map { it.toPhysicianDTO() }).add(
+                WebMvcLinkBuilder.linkTo(
+                    WebMvcLinkBuilder.methodOn(PhysiciansController::class.java)
+                        .getPhysicianAppointments(id, type, date)
+                ).withSelfRel()
             )
+        )
 
-            else -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-        }
+//        return when {
+//            !appointments.none() -> ResponseEntity.status(HttpStatus.OK).body(
+//                _appointmentModelAssembler.toCollectionModel(appointments.map { it.toPhysicianDTO() }).add(
+//                    WebMvcLinkBuilder.linkTo(
+//                        WebMvcLinkBuilder.methodOn(PhysiciansController::class.java)
+//                            .getPhysicianAppointments(id, type, date)
+//                    ).withSelfRel()
+//                )
+//            )
+//
+//            else -> ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+//        }
     }
 
     @GetMapping("/{physicianId}/patients/{patientId}/date/{date}")
@@ -261,8 +275,8 @@ class PhysiciansController(
                     ).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toPhysicianDTO()
                 )
             )
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+        } catch (e: ParseException) {
+            ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build()
         }
     }
 
@@ -290,8 +304,8 @@ class PhysiciansController(
                     )
                 }
             }
-        } catch (e: IllegalArgumentException) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        } catch (e: ParseException) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build()
         }
     }
 

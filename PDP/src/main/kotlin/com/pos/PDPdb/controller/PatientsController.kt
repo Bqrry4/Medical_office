@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -65,6 +66,10 @@ class PatientsController(
             ).add(
                 WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PhysiciansController::class.java).getAll(null, null, null, null))
                     .withRel("listPhysicians")
+
+            ).add(
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatientsController::class.java).getPatientAppointments(null, null, null))
+                    .withRel("appointments")
             )
         )
     }
@@ -136,12 +141,12 @@ class PatientsController(
                     val sqlDate = SimpleDateFormat("dd-MM-yyyy").parse(date)
 
                     appointments = _appointmentRepository.findByPatientIDAndDate(id!!, sqlDate)
-                } catch (e: IllegalArgumentException) {
-                    throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+                } catch (e: ParseException) {
+                    throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY)
                 }
             }
 
-            else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+            else -> throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY)
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -166,8 +171,8 @@ class PatientsController(
                     ).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND) }.toPatientDTO()
                 )
             )
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+        } catch (e: ParseException) {
+            ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build()
         }
     }
 
@@ -201,7 +206,7 @@ class PatientsController(
                     ResponseEntity.status(HttpStatus.FORBIDDEN).build()
                 }
             }
-        } catch (e: IllegalArgumentException) {
+        } catch (e: ParseException) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         }
     }
